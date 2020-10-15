@@ -1,0 +1,4393 @@
+<!DOCTYPE html>
+<html class="client-js" dir="ltr" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Agilent U12xxx series - sigrok</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Agilent_U12xxx_series","wgTitle":"Agilent U12xxx series","wgCurRevisionId":14731,"wgRevisionId":14731,"wgArticleId":2848,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Agilent_U12xxx_series","wgRelevantArticleId":2848,"wgRequestId":"acdd1c68a2e382862c4625ce","wgIsProbablyEditable":false,"wgRestrictionEdit":[],"wgRestrictionMove":[]});mw.loader.state({"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","user.tokens":"loading","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.sectionAnchor":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"});mw.loader.implement("user.options@0j3lz3q",function($,jQuery,require,module){mw.user.options.set({"variant":"en"});});mw.loader.implement("user.tokens@0js2zk9",function ( $, jQuery, require, module ) {
+mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});/*@nomin*/;
+
+});mw.loader.load(["mediawiki.toc","mediawiki.action.view.postEdit","site","mediawiki.page.startup","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","jquery.tablesorter","mediawiki.searchSuggest","skins.vector.js"]);});</script>
+<link rel="stylesheet" href="Agilent%20U12xxx%20series%20-%20sigrok_files/load_002.css">
+<script async="" src="Agilent%20U12xxx%20series%20-%20sigrok_files/load_002.php"></script>
+<style>
+.suggestions{overflow:hidden;position:absolute;top:0;left:0;width:0;border:0;z-index:1099;padding:0;margin:-1px 0 0 0}.suggestions-special{position:relative;background-color:#fff;cursor:pointer;border:solid 1px #aaa;margin:0;margin-top:-2px;display:none;padding:0.25em 0.25em;line-height:1.25em}.suggestions-results{background-color:#fff;cursor:pointer;border:solid 1px #aaa;padding:0;margin:0}.suggestions-result{color:#000;margin:0;line-height:1.5em;padding:0.01em 0.25em;text-align:left; overflow:hidden;-o-text-overflow:ellipsis; text-overflow:ellipsis;white-space:nowrap}.suggestions-result-current{background-color:#4c59a6;color:#fff}.suggestions-special .special-label{color:#808080;text-align:left}.suggestions-special .special-query{color:#000;font-style:italic;text-align:left}.suggestions-special .special-hover{background-color:#c0c0c0}.suggestions-result-current .special-label,.suggestions-result-current .special-query{color:#fff}.highlight{font-weight:bold}
+@media screen {
+	.tochidden,.toctoggle{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}.toctoggle{font-size:94%}}
+@media print {
+	#toc.tochidden,.toc.tochidden,.toctoggle{display:none}}
+table.jquery-tablesorter th.headerSort{background-image:url(/w/resources/src/jquery/images/sort_both.png?8b01b);background-image:linear-gradient(transparent,transparent),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2021%209%22%20height%3D%229%22%20width%3D%2221%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M14.5%205l-4%204-4-4zM14.5%204l-4-4-4%204z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:-o-linear-gradient(transparent,transparent),url(/w/resources/src/jquery/images/sort_both.png?8b01b);cursor:pointer;background-repeat:no-repeat;background-position:center right;padding-right:21px}table.jquery-tablesorter th.headerSortUp{background-image:url(/w/resources/src/jquery/images/sort_up.png?76242);background-image:linear-gradient(transparent,transparent),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2021%204%22%20height%3D%224%22%20width%3D%2221%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M6.5%204l4-4%204%204z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:-o-linear-gradient(transparent,transparent),url(/w/resources/src/jquery/images/sort_up.png?76242)}table.jquery-tablesorter th.headerSortDown{background-image:url(/w/resources/src/jquery/images/sort_down.png?3f399);background-image:linear-gradient(transparent,transparent),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2021%204%22%20height%3D%224%22%20width%3D%2221%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M14.5%200l-4%204-4-4z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:-o-linear-gradient(transparent,transparent),url(/w/resources/src/jquery/images/sort_down.png?3f399)}
+.postedit-container{margin:0 auto;position:fixed;top:0;height:0;left:50%;z-index:1000;font-size:13px}.postedit-container:hover{cursor:pointer}.postedit{position:relative;top:0.6em;left:-50%;padding:0.6em 3.6em 0.6em 1.1em;line-height:1.5625em;color:#626465;background-color:#f4f4f4;border:1px solid #dcd9d9;text-shadow:0 0.0625em 0 rgba( 255,255,255,0.5 );border-radius:5px;box-shadow:0 2px 5px 0 #ccc;-webkit-transition:all 0.25s ease-in-out;-moz-transition:all 0.25s ease-in-out;-ms-transition:all 0.25s ease-in-out;-o-transition:all 0.25s ease-in-out;transition:all 0.25s ease-in-out}.skin-monobook .postedit{top:6em !important; }.postedit-faded{opacity:0}.postedit-icon{padding-left:41px;  line-height:25px;background-repeat:no-repeat;background-position:8px 50%}.postedit-icon-checkmark{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB9ElEQVR4AZWRA3AYURQArxrVHtW2bdu2bdu2zdi2bdu2bWxs7zeehZaw4f70kbs+zI3e/nWK+RWx3aOFlrL56Sy5SxrruG69hlv6OyK+mz+8KDSXdXembj0ispT7tjs4ZTIbpYBvxGSGKzZTeFrb7W/meN002swFs0U8ttpHTkF2BvCqWQrW35929bTsKm5Zb+SEwWwcY8wAngB9m7Z+d+rIPZ/npdy12M5p47n8dXsCYAf0qPy06eGMdktuDu9Qf+JmKl3SWM91qzVcN9tAbEYkwMaq0tyb1m/To5kP170el/BK8/qa6sJr70ydf+T/Uu5ab+Oo/lS0AkUBpIFWlZ9WPhxpse/PHO7YbOOczjL0vZV2lNxPPtG73dYXM+xvm2znrOl83tidoqCwMBgYXsPFB0on5S6pr+eK5TKuW67lgvaKvF8mL1dtfTL32FHxRdyx3cQpg7m4x9sCXKkTIzA4LDH44zWdzaUf71hv5rTG4uyzcusybxSX7aThbMQ8XgCYAp3rzTTQOiIh9PNlzY3FSuZxrzjme1Y7uGS6kjsWO4jPjM4FVjRZsvD4kO9XtTZzQn82NyzWc0B7AmZh6gA/hOYSGhfw9YbOVnarj+S7800AL2BIsxUAbWNToj7bhBuQmZcOsFdoKUC74rGheCwXmqAIQTc9jQcrADIAAAAASUVORK5CYII=);background-image:url(/w/resources/src/mediawiki.action/images/green-checkmark.png?d94f1)!ie;background-position:left}.postedit-close{position:absolute;padding:0 0.8em;right:0;top:0;font-size:1.25em;font-weight:bold;line-height:2.3em;color:#000;text-shadow:0 0.0625em 0 #fff;text-decoration:none;opacity:0.2;filter:alpha( opacity=20 )}.postedit-close:hover{color:#000;text-decoration:none;opacity:0.4;filter:alpha( opacity=40 )}</style><style>
+.suggestions a.mw-searchSuggest-link,.suggestions a.mw-searchSuggest-link:hover,.suggestions a.mw-searchSuggest-link:active,.suggestions a.mw-searchSuggest-link:focus{color:#000;text-decoration:none}.suggestions-result-current a.mw-searchSuggest-link,.suggestions-result-current a.mw-searchSuggest-link:hover,.suggestions-result-current a.mw-searchSuggest-link:active,.suggestions-result-current a.mw-searchSuggest-link:focus{color:#fff}.suggestions a.mw-searchSuggest-link .special-query{ overflow:hidden;-o-text-overflow:ellipsis; text-overflow:ellipsis;white-space:nowrap}</style><meta name="ResourceLoaderDynamicStyles" content="">
+<link rel="stylesheet" href="Agilent%20U12xxx%20series%20-%20sigrok_files/load.css">
+<meta name="generator" content="MediaWiki 1.29.0">
+<link rel="shortcut icon" href="https://sigrok.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://sigrok.org/w/opensearch_desc.php" title="sigrok (en)">
+<link rel="EditURI" type="application/rsd+xml" href="https://sigrok.org/w/api.php?action=rsd">
+<link rel="alternate" type="application/atom+xml" title="sigrok Atom feed" href="https://sigrok.org/w/index.php?title=Special:RecentChanges&amp;feed=atom">
+<script src="Agilent%20U12xxx%20series%20-%20sigrok_files/load.php"></script></head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Agilent_U12xxx_series rootpage-Agilent_U12xxx_series skin-vector action-view">		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<div id="content" class="mw-body" role="main">
+			<a id="top"></a>
+
+						<div class="mw-indicators mw-body-content">
+</div>
+			<h1 id="firstHeading" class="firstHeading" lang="en">Agilent U12xxx series</h1>
+									<div id="bodyContent" class="mw-body-content">
+									<div id="siteSub">From sigrok</div>
+								<div id="contentSub"></div>
+												<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<div id="mw-content-text" dir="ltr" class="mw-content-ltr" lang="en"><p>The Agilent U12xxx series are handheld digital multimeters, ranging from inexpensive all-purpose meters to industrial meters.
+</p>
+<table style="width: 40em; font-size: smaller" class="alternategrey sigroktable" border="0">
+
+<tbody><tr>
+<th style="widthx: 5em; text-align: left;"> Model
+</th>
+<th style="widthx: 4em; text-align: left;"> Counts
+</th>
+<th style="widthx: 4em; text-align: left;"> Supported
+</th></tr>
+<tr>
+<td> U1231A
+</td>
+<td> 6000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> <a href="https://sigrok.org/wiki/Agilent_U1232A" title="Agilent U1232A">U1232A</a>
+</td>
+<td> 6000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1233A
+</td>
+<td> 6000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1241A / U1241B
+</td>
+<td> 10000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1241C
+</td>
+<td> 10000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1242A / U1242B
+</td>
+<td> 10000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> <a href="https://sigrok.org/wiki/Keysight_U1242C" title="Keysight U1242C">U1242C</a>
+</td>
+<td> 10000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1251A / U1251B
+</td>
+<td> 50000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1252A / U1252B
+</td>
+<td> 50000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1253A / U1253B
+</td>
+<td> 50000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1271A
+</td>
+<td> 30000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> <a href="https://sigrok.org/wiki/Agilent_U1272A" title="Agilent U1272A">U1272A</a>
+</td>
+<td> 30000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1273A
+</td>
+<td> 30000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1273AX
+</td>
+<td> 30000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1281A
+</td>
+<td> 60000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr>
+<tr>
+<td> U1282A
+</td>
+<td> 60000
+</td>
+<td style="background-color: lime"> Yes
+</td></tr></tbody></table>
+<p>Is your model not supported yet? Get in touch! We need people to help
+ us test other models in this series, and getting a new model supported 
+is generally quick &amp; easy.
+</p>
+<div id="toc" class="toc"><div id="toctitle" class="toctitle"><h2>Contents</h2><span class="toctoggle">&nbsp;[<a role="button" tabindex="0" class="togglelink">hide</a>]&nbsp;</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Connection"><span class="tocnumber">1</span> <span class="toctext">Connection</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Protocol"><span class="tocnumber">2</span> <span class="toctext">Protocol</span></a>
+<ul>
+<li class="toclevel-2 tocsection-3"><a href="#.2AIDN.3F"><span class="tocnumber">2.1</span> <span class="toctext">*IDN?</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#.2ARST"><span class="tocnumber">2.2</span> <span class="toctext">*RST</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#SYST:BATT.3F"><span class="tocnumber">2.3</span> <span class="toctext">SYST:BATT?</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#SYST:BEEP"><span class="tocnumber">2.4</span> <span class="toctext">SYST:BEEP</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#SYST:BLIT"><span class="tocnumber">2.5</span> <span class="toctext">SYST:BLIT</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#FETC.3F"><span class="tocnumber">2.6</span> <span class="toctext">FETC?</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#CONF:"><span class="tocnumber">2.7</span> <span class="toctext">CONF:</span></a>
+<ul>
+<li class="toclevel-3 tocsection-10"><a href="#U123xx_models"><span class="tocnumber">2.7.1</span> <span class="toctext">U123xx models</span></a></li>
+<li class="toclevel-3 tocsection-11"><a href="#U124xx.2FU125xx_models"><span class="tocnumber">2.7.2</span> <span class="toctext">U124xx/U125xx models</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-12"><a href="#CONF.3F"><span class="tocnumber">2.8</span> <span class="toctext">CONF?</span></a>
+<ul>
+<li class="toclevel-3 tocsection-13"><a href="#U123xx_models_2"><span class="tocnumber">2.8.1</span> <span class="toctext">U123xx models</span></a></li>
+<li class="toclevel-3 tocsection-14"><a href="#U124xx_and_U125xx_models"><span class="tocnumber">2.8.2</span> <span class="toctext">U124xx and U125xx models</span></a></li>
+<li class="toclevel-3 tocsection-15"><a href="#U124xC"><span class="tocnumber">2.8.3</span> <span class="toctext">U124xC</span></a></li>
+<li class="toclevel-3 tocsection-16"><a href="#U128xx"><span class="tocnumber">2.8.4</span> <span class="toctext">U128xx</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-17"><a href="#STAT.3F"><span class="tocnumber">2.9</span> <span class="toctext">STAT?</span></a>
+<ul>
+<li class="toclevel-3 tocsection-18"><a href="#U123xx_models_3"><span class="tocnumber">2.9.1</span> <span class="toctext">U123xx models</span></a></li>
+<li class="toclevel-3 tocsection-19"><a href="#U124xx_models"><span class="tocnumber">2.9.2</span> <span class="toctext">U124xx models</span></a></li>
+<li class="toclevel-3 tocsection-20"><a href="#U124xC_models"><span class="tocnumber">2.9.3</span> <span class="toctext">U124xC models</span></a></li>
+<li class="toclevel-3 tocsection-21"><a href="#U125xx_models"><span class="tocnumber">2.9.4</span> <span class="toctext">U125xx models</span></a></li>
+<li class="toclevel-3 tocsection-22"><a href="#U127xx_models"><span class="tocnumber">2.9.5</span> <span class="toctext">U127xx models</span></a></li>
+<li class="toclevel-3 tocsection-23"><a href="#U128xx_models"><span class="tocnumber">2.9.6</span> <span class="toctext">U128xx models</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-24"><a href="#LOG:"><span class="tocnumber">2.10</span> <span class="toctext">LOG:</span></a>
+<ul>
+<li class="toclevel-3 tocsection-25"><a href="#U123xx_models_4"><span class="tocnumber">2.10.1</span> <span class="toctext">U123xx models</span></a></li>
+<li class="toclevel-3 tocsection-26"><a href="#U124xC_models_2"><span class="tocnumber">2.10.2</span> <span class="toctext">U124xC models</span></a></li>
+<li class="toclevel-3 tocsection-27"><a href="#U125xx_models_2"><span class="tocnumber">2.10.3</span> <span class="toctext">U125xx models</span></a></li>
+<li class="toclevel-3 tocsection-28"><a href="#U128xx_models_2"><span class="tocnumber">2.10.4</span> <span class="toctext">U128xx models</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-29"><a href="#Event_Notifiers"><span class="tocnumber">2.11</span> <span class="toctext">Event Notifiers</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-30"><a href="#Resources"><span class="tocnumber">3</span> <span class="toctext">Resources</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Connection">Connection</span></h2>
+<p>All models communicate via an optically isolated serial connection, 
+usually at 9600 bps, 8 bits, no parity, and 1 stop bit (9600/8n1). Some 
+models allow the user to change the serial parameters (e.g. the U1272A 
+supports 9600/19200 baud, 7/8bits, parity odd/even/none).
+</p><p>Connecting to the devices can be done either via USB (<a href="https://sigrok.org/wiki/Device_cables#Agilent_U1173A" title="Device cables">U1173A cable</a> or <a href="https://sigrok.org/wiki/Device_cables#Agilent_U1173B" title="Device cables">U1173B cable</a>) or Bluetooth (<a href="https://sigrok.org/wiki/Device_cables#Agilent_U1177A" title="Device cables">U1177A interface</a>).
+</p>
+<h2><span class="mw-headline" id="Protocol">Protocol</span></h2>
+<p>All models in this series use generally the same protocol, with only 
+minor differences between models – and none within the same range.
+</p><p>The meters will respond to commands, which consist of a short 
+ASCII string followed by either LF or CR+LF. The meter will either send 
+no response at all, some ASCII text followed by CR+LF, or <code>*E</code> followed by CR+LF if the command given was invalid.
+</p><p>Some events (such as turning the rotary switch) will cause spontaneous transmissions of event notifiers. These consist of a <code>*</code> character, a single character and CR+LF.
+</p>
+<h3><span class="mw-headline" id=".2AIDN.3F">*IDN?</span></h3>
+<p>Sending the command <code>*IDN?</code> causes the device to return a 
+comma-separated four-field string, compatible with the identical GPIB 
+command. The four fields are vendor name, model name, serial number and 
+version:
+</p>
+<pre>Agilent Technologies,U1232A,MY52020136,V1.00
+Agilent Technologies,U1272A,MY5<i>xxxxxxx</i>,V2.04
+Keysight Technologies,U1242C,MY5<i>xxxxxxx</i>,V1.20
+Keysight Technologies,U1282A,MY5<i>xxxxxxx</i>,V1.03
+</pre>
+<h3><span class="mw-headline" id=".2ARST">*RST</span></h3>
+<p>Sending the command <code>*RST</code> causes the device to reset. The response is an asterisk followed by the current dial position, for example <code>*1</code> indicates the first position.
+</p>
+<h3><span class="mw-headline" id="SYST:BATT.3F">SYST:BATT?</span></h3>
+<p>The command <code>SYST:BATT?</code> returns a value indicating the device's battery level. The value is in a different format depending on the model series:
+</p><p>The U123xx, U124xC, U127xx and U128xx models return a percentage value, like this:
+</p>
+<pre>36%
+</pre>
+<p>The U124xx models return a value like this:
+</p>
+<pre>+1.04200000E+02
+</pre>
+<h3><span class="mw-headline" id="SYST:BEEP">SYST:BEEP</span></h3>
+<p>The command <code>SYST:BEEP</code> or <code>SYST:BEEP TONE</code> makes the multimeter emit a beep.
+</p>
+<h3><span class="mw-headline" id="SYST:BLIT">SYST:BLIT</span></h3>
+<p>The commands <code>SYST:BLIT 1</code> and <code>SYST:BLIT 0</code> 
+turn the screen backlight on and off. There is no response. The 
+backlight timer will still run and turn the backlight back off again if 
+it is enabled.
+</p><p>The U127x devices don't seem to support this command.
+</p>
+<h3><span class="mw-headline" id="FETC.3F">FETC?</span></h3>
+<p>The <code>FETC?</code> command returns the current measured value, as a floating point ASCII string, as in the following examples:
+</p>
+<pre>+9.25000000E-03
++0.00000000E+00
+-1.01140000E+00
+-9.10200000E-01
+</pre>
+<p>The sign characters are always present, and the value is always in 
+normalized scientific format. This applies even when in a mode that uses
+ integer numbers, 11 would be transmitted as <code>+1.10000000E+01</code>. If no valid measurement is available, i.e. the display shows "OL" or "-OL", the transmitted value is either <code>+9.90000000E+37</code> and <code>-9.90000000E+37</code> respectively.
+</p><p>For models with dual display, the <code>FETC? @2</code> command returns the current value from the secondary display, in the same format.
+</p>
+<h3><span class="mw-headline" id="CONF:">CONF:</span></h3>
+<p>The <code>CONF:</code> commands can be used to change modes and ranges on the multimeter. It is not to be confused with the <code>CONF?</code> query described below.
+</p><p>For a given rotary switch position, only those CONF: commands 
+work that switch to modes that can be reached by pressing the range or 
+shift buttons.
+</p>
+<h4><span class="mw-headline" id="U123xx_models">U123xx models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 12em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Command
+</th>
+<th style="width: 15em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Rotary Switch Setting
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> <code>CONF:VOLT:AC</code>
+</td>
+<td> Any voltage mode
+</td>
+<td> Switch to Volts AC mode with autoranging
+</td></tr>
+<tr>
+<td> <code>CONF:VOLT:DC</code>
+</td>
+<td> Any voltage mode
+</td>
+<td> Switch to Volts DC mode with autoranging
+</td></tr>
+<tr>
+<td> <code>CONF:VOLT:AC 600</code>
+</td>
+<td> Any voltage mode
+</td>
+<td> Switch to Volts AC mode and 600V range. Valid ranges are: 600, 60, 6, 0.6
+</td></tr>
+<tr>
+<td> <code>CONF:VOLT:AC 600</code>
+</td>
+<td> Any voltage mode
+</td>
+<td> Switch to Volts AC mode and 600V range. Valid ranges are: 600, 60, 6, 0.6
+</td></tr>
+<tr>
+<td> <code>CONF:CURR:AC</code>
+</td>
+<td> Any current mode
+</td>
+<td> Switch to AC current measurement mode with autoranging
+</td></tr>
+<tr>
+<td> <code>CONF:CURR:DC</code>
+</td>
+<td> Any current mode
+</td>
+<td> Switch to DC current measurement mode with autoranging
+</td></tr>
+<tr>
+<td> <code>CONF:CURR:AC 60u</code>
+</td>
+<td> Any current mode
+</td>
+<td> Switch to AC current measurement mode and 60uA range. Valid ranges are 10, 6 for A mode, and 600u, 60u for uA mode.
+</td></tr>
+<tr>
+<td> <code>CONF:CURR:DC 60u</code>
+</td>
+<td> Any current mode
+</td>
+<td> Switch to DC current measurement mode and 60uA range. Valid ranges are 10, 6 for A mode, and 600u, 60u for uA mode.
+</td></tr>
+<tr>
+<td> <code>CONF:FREQ</code>
+</td>
+<td> VZlow, AC voltage or any current mode
+</td>
+<td> Switch to frequency measurement mode. No manual ranges are available.
+</td></tr>
+<tr>
+<td> <code>CONF:CONT</code>
+</td>
+<td> Resistance
+</td>
+<td> Switch to continuity mode.
+</td></tr>
+<tr>
+<td> <code>CONF:RES</code>
+</td>
+<td> Resistance
+</td>
+<td> Switch to resistance mode with autoranging.
+</td></tr>
+<tr>
+<td> <code>CONF:RES 6M</code>
+</td>
+<td> Resistance
+</td>
+<td> Switch to resistance mode and 6MΩ range. Valid ranges are 60M, 6M, 600k, 60k 6k, 600
+</td></tr>
+<tr>
+<td> <code>CONF:CAP</code>
+</td>
+<td> Capacitance
+</td>
+<td> Switch to capacitance mode with autoranging.
+</td></tr>
+<tr>
+<td> <code>CONF:CAP 1000n</code>
+</td>
+<td> Capacitance
+</td>
+<td> Switch to capacitance mode and 1000nF range. Valid ranges are: 10m, 1000u, 100u, 10u, 1000n
+<p><br>
+</p>
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U124xx.2FU125xx_models">U124xx/U125xx models</span></h4>
+<p>Same as above for the U123xx, except for different ranges.
+</p>
+<h3><span class="mw-headline" id="CONF.3F">CONF?</span></h3>
+<p>The <code>CONF?</code> command queries the device's current measurement configuration.
+</p>
+<h4><span class="mw-headline" id="U123xx_models_2">U123xx models</span></h4>
+<p>This can be either one, two or three comma-separated fields. The 
+number of fields depends on the first field's value, but the second 
+field always denotes the measurement mode's range and resolution, and 
+the third field is the current type (AC or DC). For example, this 
+indicates AC voltage in the 600mV range:
+</p>
+<pre>V,0,AC
+</pre>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Mode
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Resolution
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Current
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> V
+</td>
+<td> y
+</td>
+<td> y
+</td>
+<td> <b>Volts</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td>
+</td>
+<td> Range 600mV, resolution 0.1mV
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 6V, resolution 1mV
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td>
+</td>
+<td> Range 60V, resolution 0.01V
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td>
+</td>
+<td> Range 600V, resolution 0.1V
+</td></tr>
+<tr>
+<td> MV
+</td>
+<td> y
+</td>
+<td> y
+</td>
+<td> <b>Millivolts</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 600mV, resolution 0.1mV
+</td></tr>
+<tr>
+<td> A
+</td>
+<td> y
+</td>
+<td> y
+</td>
+<td> <b>Ampere</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td>
+</td>
+<td> Range 6A, resolution 1mA
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 10A, resolution 0.01A
+</td></tr>
+<tr>
+<td> UA
+</td>
+<td> y
+</td>
+<td> y
+</td>
+<td> <b>Microampere</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td>
+</td>
+<td> Range 60μA, resolution 0.01μA
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 600μA, resolution 0.1μA
+</td></tr>
+<tr>
+<td> FREQ
+</td>
+<td> y
+</td>
+<td> y
+</td>
+<td> <b>AC frequency</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td>
+</td>
+<td> Range 99.9 Hz, resolution 0.01 Hz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 999.9 Hz, resolution 0.1 Hz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td>
+</td>
+<td> Range 9.999 kHz, resolution 1 Hz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td>
+</td>
+<td> Range 99.99 kHz, resolution 10 Hz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td>
+</td>
+<td> Range 200 kHz, resolution 100 Hz
+</td></tr>
+<tr>
+<td> RES
+</td>
+<td> y
+</td>
+<td> n
+</td>
+<td> <b>Resistance</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td>
+</td>
+<td> Range 600Ω, resolution 0.1Ω
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 6kΩ, resolution 0.001kΩ
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td>
+</td>
+<td> Range 60kΩ, resolution 0.01kΩ
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td>
+</td>
+<td> Range 600kΩ, resolution 0.1kΩ
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td>
+</td>
+<td> Range 6MΩ, resolution 0.001MΩ
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 5
+</td>
+<td>
+</td>
+<td> Range 60MΩ, resolution 0.01MΩ
+</td></tr>
+<tr>
+<td> CAP
+</td>
+<td> y
+</td>
+<td> n
+</td>
+<td> <b>Capacitance</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td>
+</td>
+<td> Range 1000nF, resolution 1nF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td>
+</td>
+<td> Range 10μF, resolution 0.01μF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td>
+</td>
+<td> Range 100μF, resolution 0.1μF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td>
+</td>
+<td> Range 1000μF, resolution 1μF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td>
+</td>
+<td> Range 10mF, resolution 0.01mF
+</td></tr>
+<tr>
+<td> DIOD
+</td>
+<td> n
+</td>
+<td> n
+</td>
+<td> <b>Diode</b>
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U124xx_and_U125xx_models">U124xx and U125xx models</span></h4>
+<p>The output consists of a quoted string with the meter's mode, 
+followed by a space, two values, separated by a comma, denoting the 
+current range, and the value of one count. The mode may optionally 
+include a colon followed by a code denoting a submode relevant to that 
+major mode.
+For example, AC voltage mode with 1000mV range on a 10000-count U1241B 
+would be given as:
+</p>
+<pre>"VOLT:AC +1.000000E+00,+1.000000E-04"
+</pre>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 5em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Mode
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> <code>VOLT</code>
+</td>
+<td> DC voltage
+</td></tr>
+<tr>
+<td> <code>VOLT:AC</code>
+</td>
+<td> AC voltage
+</td></tr>
+<tr>
+<td> <code>CURR</code>
+</td>
+<td> DC current
+</td></tr>
+<tr>
+<td> <code>CURR:AC</code>
+</td>
+<td> AC current
+</td></tr>
+<tr>
+<td> <code>FREQ</code>
+</td>
+<td> Frequency counter
+</td></tr>
+<tr>
+<td> <code>DIOD</code>
+</td>
+<td> Diode check. No range values are given.
+</td></tr>
+<tr>
+<td> <code>CONT</code>
+</td>
+<td> Continuity. No range values are given.
+</td></tr>
+<tr>
+<td> <code>RES</code>
+</td>
+<td> Resistance
+</td></tr>
+<tr>
+<td> <code>CAP</code>
+</td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> <code>SCOU</code>
+</td>
+<td> Switch counter. No range values are given.
+</td></tr>
+<tr>
+<td> <code>CPER:0-20mA</code>
+</td>
+<td> Current loop, 0-20mA setting
+</td></tr>
+<tr>
+<td> <code>CPER:4-20mA</code>
+</td>
+<td> Current loop, 4-20mA setting
+</td></tr>
+<tr>
+<td> <code>T1:K</code> or <code>T2:K</code>
+</td>
+<td> Temperature on T1 or T2, submode can be K or J, denoting the thermocouple type. Instead of range values, <code>CEL</code> or <code>FAR</code> is given, denoting the measurement is in degrees Celsius or Fahrenheit. The full response might thus be: <code>"T1:K CEL"</code>.
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U124xC">U124xC</span></h4>
+<p>The output is very similar to the U124xx and U125xx models with a few differences and additions.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 5em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Mode
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> <code>VOLT</code>
+</td>
+<td> DC voltage
+</td></tr>
+<tr>
+<td> <code>VOLT:AC</code>
+</td>
+<td> AC voltage
+</td></tr>
+<tr>
+<td> <code>VOLT:HRAT</code>
+</td>
+<td> Harmonic Ratio
+</td></tr>
+<tr>
+<td> <code>CURR</code>
+</td>
+<td> DC current
+</td></tr>
+<tr>
+<td> <code>CURR:AC</code>
+</td>
+<td> AC current
+</td></tr>
+<tr>
+<td> <code>FREQ</code> <code>FREQ:AC</code>
+</td>
+<td> Frequency
+</td></tr>
+<tr>
+<td> <code>DIOD</code>
+</td>
+<td> Diode check. No range values are given.
+</td></tr>
+<tr>
+<td> <code>CONT</code>
+</td>
+<td> Continuity
+</td></tr>
+<tr>
+<td> <code>RES</code>
+</td>
+<td> Resistance
+</td></tr>
+<tr>
+<td> <code>CAP</code>
+</td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> <code>CPER:0-20mA</code>
+</td>
+<td> Current loop, 0-20mA setting
+</td></tr>
+<tr>
+<td> <code>CPER:4-20mA</code>
+</td>
+<td> Current loop, 4-20mA setting
+</td></tr>
+<tr>
+<td> <code>TEMP</code>
+</td>
+<td> Internal temperature. No range values are given.
+</td></tr>
+<tr>
+<td> <code>TEMP:K</code>
+</td>
+<td> Temperature, submode can be K or J, denoting the thermocouple type. Instead of range values, <code>CEL</code> or <code>FAR</code> is given, denoting the measurement is in degrees Celsius or Fahrenheit. The full response might thus be: <code>"TEMP:K CEL"</code>.
+</td></tr>
+<tr>
+<td> <code>NCV</code>
+</td>
+<td> Vsense (Non-contact Voltage). Instead of range values, <code>HI</code> or <code>LO</code> is given, denoting High sensivity or Low sensivity. The full response might thus be: <code>"NCV HI"</code>.
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U128xx">U128xx</span></h4>
+<p>The output is very similar to the U124xC model with a few additions.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 5em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Mode
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> <code>VOLT</code>
+</td>
+<td> DC voltage
+</td></tr>
+<tr>
+<td> <code>VOLT:AC</code>
+</td>
+<td> AC voltage
+</td></tr>
+<tr>
+<td> <code>VOLT:ACDC</code>
+</td>
+<td> AC+DC voltage
+</td></tr>
+<tr>
+<td> <code>CURR</code>
+</td>
+<td> DC current
+</td></tr>
+<tr>
+<td> <code>CURR:AC</code>
+</td>
+<td> AC current
+</td></tr>
+<tr>
+<td> <code>CURR:ACDC</code>
+</td>
+<td> AC+DC current
+</td></tr>
+<tr>
+<td> <code>FREQ</code> <code>FREQ:AC</code>
+</td>
+<td> Frequency
+</td></tr>
+<tr>
+<td> <code>PULS:PWID</code> <code>PULS:PWID:AC</code>
+</td>
+<td> Pulse width
+</td></tr>
+<tr>
+<td> <code>PULS:PDUT</code>
+</td>
+<td> Duty cycle. No range values are given.
+</td></tr>
+<tr>
+<td> <code>FC1</code>
+</td>
+<td> Frequency counter (0.5 Hz to 10 MHz)
+</td></tr>
+<tr>
+<td> <code>FC100</code>
+</td>
+<td> Frequency counter (1 MHz to 100 MHz)
+</td></tr>
+<tr>
+<td> <code>DIOD</code>
+</td>
+<td> Diode check. No range values are given.
+</td></tr>
+<tr>
+<td> <code>CONT</code>
+</td>
+<td> Continuity
+</td></tr>
+<tr>
+<td> <code>RES</code>
+</td>
+<td> Resistance
+</td></tr>
+<tr>
+<td> <code>COND</code>
+</td>
+<td> Conductance
+</td></tr>
+<tr>
+<td> <code>CAP</code>
+</td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> <code>CPER:0-20mA</code>
+</td>
+<td> Current loop, 0-20mA setting
+</td></tr>
+<tr>
+<td> <code>CPER:4-20mA</code>
+</td>
+<td> Current loop, 4-20mA setting
+</td></tr>
+<tr>
+<td> <code>TEMP</code>
+</td>
+<td> Internal temperature. No range values are given.
+</td></tr>
+<tr>
+<td> <code>TEMP:K</code>
+</td>
+<td> Temperature, submode can be K or J, denoting the thermocouple type. Instead of range values, <code>CEL</code> or <code>FAR</code> is given, denoting the measurement is in degrees Celsius or Fahrenheit. The full response might thus be: <code>"TEMP:K CEL"</code>.
+</td></tr>
+<tr>
+<td> <code>SQU</code>
+</td>
+<td> Square wave output. No range values are given.
+</td></tr>
+<tr>
+<td> <code>NCV</code>
+</td>
+<td> Vsense (Non-contact Voltage). Instead of range values, <code>HIGH</code> or <code>LOW</code> is given, denoting High sensivity or Low sensivity. The full response might thus be: <code>"NCV HIGH"</code>.
+</td></tr></tbody><tfoot></tfoot></table>
+<h3><span class="mw-headline" id="STAT.3F">STAT?</span></h3>
+<p>The <code>STAT?</code> command is used to query the current state of the device. The response is a quoted 21-byte string, like this:
+</p>
+<pre>"000000000110L00000000"
+</pre>
+<h4><span class="mw-headline" id="U123xx_models_3">U123xx models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> 1
+</td>
+<td>
+</td>
+<td> <b>Max/min/avg mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 2
+</td>
+<td>
+</td>
+<td> <b>Relative measurement</b>. The last value returned from FETC? before this mode was enabled denotes the stored reference value.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 3
+</td>
+<td>
+</td>
+<td> <b>Trig hold-log</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 4
+</td>
+<td>
+</td>
+<td> <b>Auto hold-log</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 5
+</td>
+<td>
+</td>
+<td> <b>LED flashlight</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 6
+</td>
+<td>
+</td>
+<td> <b>LCD backlight</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 7
+</td>
+<td>
+</td>
+<td> <b>Smoothing</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 8
+</td>
+<td>
+</td>
+<td> <b>Temp/aux mode</b>. When on and rotary switch is in position 5 (capacitance), CONF? returns <code>MV,1,DC</code>,
+ but the value returned from FETC? instead denotes the temperature, in 
+the unit (F or C) according to the meter's configuration.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 9
+</td>
+<td>
+</td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr>
+<td> 10
+</td>
+<td>
+</td>
+<td> <b>Beep frequency</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td> 4.2kHz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td> 3.8kHz (default)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td> 3.4kHz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td> 3.2kHz
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td> Off
+</td></tr>
+<tr>
+<td> 11
+</td>
+<td>
+</td>
+<td> <b>Auto power-off</b> (APO)
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 12
+</td>
+<td>
+</td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 13
+</td>
+<td>
+</td>
+<td> <i>Unknown (always L)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 14-15
+</td>
+<td>
+</td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr>
+<td> 16
+</td>
+<td>
+</td>
+<td> <b>Rotary switch position</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td> V/Zlow
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td> Voltage AC
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td> Voltage DC
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td> Resistance
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td> Diode
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 5
+</td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 6
+</td>
+<td> Current
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 7
+</td>
+<td> Microcurrent
+</td></tr>
+<tr>
+<td> 17
+</td>
+<td>
+</td>
+<td> <b>Continuity mode</b>. When enabled, the value returned from FETC? is either NAN (no continuity) or any real value to denote continuity.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 18
+</td>
+<td>
+</td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr>
+<td> 19
+</td>
+<td>
+</td>
+<td> <b>Battery low indicator</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Battery OK
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Battery low
+</td></tr>
+<tr style="background-color: red;">
+<td> 20-21
+</td>
+<td>
+</td>
+<td> <i>Unknown (always 0)</i>
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U124xx_models">U124xx models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> 1 </td>
+<td> </td>
+<td> <b>Max/min/avg mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 2 </td>
+<td> </td>
+<td> <b>Relative measurement</b>. The last value returned from FETC? before this mode was enabled denotes the stored reference value.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 3 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 4 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 5 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 6 </td>
+<td> </td>
+<td> <b>Current loop mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> 0-20mA mode
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 4-20mA mode
+</td></tr>
+<tr style="background-color: red;">
+<td> 7 </td>
+<td> </td>
+<td> <i>Unknown (always I)</i>
+</td></tr>
+<tr>
+<td> 8 </td>
+<td> </td>
+<td> <b>Hold mode</b>.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 9 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Beep frequency</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off (no beeps)
+</td></tr>
+<tr>
+<td> </td>
+<td> C </td>
+<td> 300Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> F </td>
+<td> 600Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 1200Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> 2400Hz
+</td></tr>
+<tr>
+<td> 11 </td>
+<td> </td>
+<td> <b>Auto power-off</b> (APO)
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 12 </td>
+<td> </td>
+<td> <b>LCD backlight</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 13 </td>
+<td> </td>
+<td> <i>Unknown (always L)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 14 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 15 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 16 </td>
+<td> </td>
+<td> <b>Rotary switch position</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Voltage
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Diode
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> Resistance
+</td></tr>
+<tr>
+<td> </td>
+<td> 3 </td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> </td>
+<td> 4 </td>
+<td> uA
+</td></tr>
+<tr>
+<td> </td>
+<td> 5 </td>
+<td> mA
+</td></tr>
+<tr>
+<td> </td>
+<td> 6 </td>
+<td> A
+</td></tr>
+<tr>
+<td> </td>
+<td> 7 </td>
+<td> Temperature
+</td></tr>
+<tr style="background-color: red;">
+<td> 17 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 18 </td>
+<td> </td>
+<td> <i>Unknown (always 1)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 19 </td>
+<td> </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 20 </td>
+<td> </td>
+<td> <b>Switch counter mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> increase count on rising flank (initially low)
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> increase count on falling flank (initially high)
+</td></tr>
+<tr>
+<td> 21 </td>
+<td> </td>
+<td> <b>Auto range</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U124xC_models">U124xC models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> 1
+</td>
+<td>
+</td>
+<td> <b>Max/min/avg/maxminavg mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 2
+</td>
+<td>
+</td>
+<td> <b>Relative measurement</b>. The last value returned from FETC? before this mode was enabled denotes the stored reference value.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 3
+</td>
+<td>
+</td>
+<td> <b>Flashlight</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 4
+</td>
+<td>
+</td>
+<td> <b>Probe socket connexion alert</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 5
+</td>
+<td>
+</td>
+<td><i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 6
+</td>
+<td>
+</td>
+<td><i>Unknown</i>
+</td></tr>
+<tr>
+<td> 7
+</td>
+<td>
+</td>
+<td> <b>Smooth mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 8
+</td>
+<td>
+</td>
+<td> <b>Trigger Hold</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 9
+</td>
+<td>
+</td>
+<td> <b>0°C Temperature compensation</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Beep frequency</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off (no beeps)
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 3200 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> 3268 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 3 </td>
+<td> 3339 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 4 </td>
+<td> 3413 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 5 </td>
+<td> 3491 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 6 </td>
+<td> 4572 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 7 </td>
+<td> 3657 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 8 </td>
+<td> 3746 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 9 </td>
+<td> 3840 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> A </td>
+<td> 3938 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> B </td>
+<td> 4042 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> C </td>
+<td> 4151 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> D </td>
+<td> 4267 Hz
+</td></tr>
+<tr>
+<td> 11
+</td>
+<td>
+</td>
+<td> <b>Auto power-off status</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 12
+</td>
+<td>
+</td>
+<td> <b>Auto Hold</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 13
+</td>
+<td>
+</td>
+<td> <b>Meter mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> L </td>
+<td> Normal
+</td></tr>
+<tr>
+<td> </td>
+<td> C </td>
+<td> Calibration
+</td></tr>
+<tr style="background-color: red;">
+<td> 14
+</td>
+<td>
+</td>
+<td><i>Unknown</i>
+</td></tr>
+<tr>
+<td> 15
+</td>
+<td>
+</td>
+<td> <i>Reserved</i>
+</td></tr>
+<tr>
+<td> 16
+</td>
+<td>
+</td>
+<td> <b>Rotary switch position</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td> Zlow Voltage AC / DC (V)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td> Voltage AC (V) / H%
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td> Voltage DC (V)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td> Resistance / continuity
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td> Diode / capacitance
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 5
+</td>
+<td> Current DC / AC (µA/mA)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 6
+</td>
+<td> Current DC / AC (A)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 7
+</td>
+<td> Temperature
+</td></tr>
+<tr>
+<td> 17
+</td>
+<td>
+</td>
+<td> <b>Battery type</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Primary
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Secondary (rechargeable)
+</td></tr>
+<tr>
+<td> 18
+</td>
+<td>
+</td>
+<td> <b>Battery low or Current percent</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Battery low or 4-20 mA mode
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> 0-20 mA mode and not Battery low
+</td></tr>
+<tr style="background-color: red;">
+<td> 19
+</td>
+<td>
+</td>
+<td><i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 20
+</td>
+<td>
+</td>
+<td><i>Unknown</i>
+</td></tr>
+<tr>
+<td> 21
+</td>
+<td>
+</td>
+<td> <b>DC filter (LPF)</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr></tbody><tfoot></tfoot></table>
+<p><br>
+</p>
+<h4><span class="mw-headline" id="U125xx_models">U125xx models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> 1
+</td>
+<td>
+</td>
+<td> <b>Max/min/avg mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 2
+</td>
+<td>
+</td>
+<td> <b>Relative measurement</b>. The last value returned from FETC? before this mode was enabled denotes the stored reference value.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 3
+</td>
+<td>
+</td>
+<td> <b>dB mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> m </td>
+<td> dBm
+</td></tr>
+<tr>
+<td> </td>
+<td> V </td>
+<td> dBV
+</td></tr>
+<tr style="background-color: red;">
+<td> 4
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 5
+</td>
+<td>
+</td>
+<td> <b>Peak hold mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 6
+</td>
+<td>
+</td>
+<td> <b>Current percent</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> 0-20mA
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 4-20mA
+</td></tr>
+<tr style="background-color: red;">
+<td> 7
+</td>
+<td>
+</td>
+<td> <i>Triggerhold I/B&nbsp;?</i>
+</td></tr>
+<tr>
+<td> 8
+</td>
+<td>
+</td>
+<td> <b>Triggered hold mode</b>.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 9
+</td>
+<td>
+</td>
+<td> <i>Zero temperature compensation?</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 10
+</td>
+<td>
+</td>
+<td> <i>Beep selection&nbsp;?</i>
+</td></tr>
+<tr>
+<td> 11
+</td>
+<td>
+</td>
+<td> <b>Auto power-off</b> (APO)
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 12
+</td>
+<td>
+</td>
+<td> <b>LCD backlight</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 13
+</td>
+<td>
+</td>
+<td> <i>Unknown (always L)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 14
+</td>
+<td>
+</td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 15
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 16
+</td>
+<td>
+</td>
+<td> <i>Rotary position&nbsp;?</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 17
+</td>
+<td>
+</td>
+<td> <i>Output status active/standby&nbsp;?</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 18
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 19
+</td>
+<td>
+</td>
+<td> <b>Battery low indicator</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Battery OK
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Battery low
+</td></tr>
+<tr>
+<td> 20
+</td>
+<td>
+</td>
+<td> <b>Frequency counter prescaler</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> No prescaling
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Divide by 100
+</td></tr>
+<tr>
+<td> 21
+</td>
+<td>
+</td>
+<td> <b>Auto range</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Manual range
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Auto range
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U127xx_models">U127xx models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> 1
+</td>
+<td>
+</td>
+<td> <b>Max/min/avg/maxminavg mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 2
+</td>
+<td>
+</td>
+<td> <b>Relative measurement</b>. The last value returned from FETC? before this mode was enabled denotes the stored reference value.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 3
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 4
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 5
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 6
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 7
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 8
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 9
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Beep frequency</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off (no beeps)
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 3200Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> 3491Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 3 </td>
+<td> 3840Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 4 </td>
+<td> 4267Hz
+</td></tr>
+<tr style="background-color: red;">
+<td> 11
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 12
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 13
+</td>
+<td>
+</td>
+<td> <i>Unknown (always L)</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 14
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr style="background-color: red;">
+<td> 15
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 16
+</td>
+<td>
+</td>
+<td> <b>Rotary switch position</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td> Zlow, V AC/DC
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td> <i>N/A (this is the "OFF" position)</i>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td> Voltage AC (V) / LPF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td> Voltage AC (mV) / LPF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td> Voltage DC / AC (V)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 5
+</td>
+<td> Voltage DC / AC (mV)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 6
+</td>
+<td> Resistance / "smart resistance" / continuity
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 7
+</td>
+<td> Diode / Auto
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 8
+</td>
+<td> Capacitance / temperature
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 9
+</td>
+<td> Current DC / AC (mA/A)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> A
+</td>
+<td> Current DC / AC (µA)<br><br><b>Note:</b> This is "A" in the "STAT?" reply, but "*10" in the event notifiers (see below).
+</td></tr>
+<tr>
+<td> 17
+</td>
+<td>
+</td>
+<td> <b>Continuity mode</b>. When enabled, the value returned from FETC? is either NAN (no continuity) or any real value to denote continuity.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 18
+</td>
+<td>
+</td>
+<td> <b>Smart Ohm mode</b> ("O'Comp" icon active on the display).
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr style="background-color: red;">
+<td> 19
+</td>
+<td>
+</td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td> 20
+</td>
+<td>
+</td>
+<td> <b>LPF</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 21
+</td>
+<td>
+</td>
+<td> <b>DC filter</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U128xx_models">U128xx models</span></h4>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> 1
+</td>
+<td>
+</td>
+<td> <b>Max/min/avg/maxminavg mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 2
+</td>
+<td>
+</td>
+<td> <b>Relative measurement</b>. The last value returned from FETC? before this mode was enabled denotes the stored reference value.
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 3
+</td>
+<td>
+</td>
+<td> <b>dB function</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> M </td>
+<td> dBm
+</td></tr>
+<tr>
+<td> </td>
+<td> V </td>
+<td> dBV
+</td></tr>
+<tr>
+<td> 4
+</td>
+<td>
+</td>
+<td> <b>Probe socket connexion alert</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 5
+</td>
+<td>
+</td>
+<td> <b>Peak-hold</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 6
+</td>
+<td>
+</td>
+<td> <b>Current percent</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 4-20 mA
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> 0-20 mA
+</td></tr>
+<tr>
+<td> 7
+</td>
+<td>
+</td>
+<td> <b>Pulse width and duty cycle trigger level</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Negative
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Positive
+</td></tr>
+<tr>
+<td> 8
+</td>
+<td>
+</td>
+<td> <b>Trigger Hold</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 9
+</td>
+<td>
+</td>
+<td> <b>0°C Temperature compensation</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Beep frequency</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off (no beeps)
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 3200 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 2 </td>
+<td> 3268 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 3 </td>
+<td> 3339 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 4 </td>
+<td> 3413 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 5 </td>
+<td> 3491 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 6 </td>
+<td> 4572 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 7 </td>
+<td> 3657 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 8 </td>
+<td> 3746 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> 9 </td>
+<td> 3840 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> A </td>
+<td> 3938 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> B </td>
+<td> 4042 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> C </td>
+<td> 4151 Hz
+</td></tr>
+<tr>
+<td> </td>
+<td> D </td>
+<td> 4267 Hz
+</td></tr>
+<tr>
+<td> 11
+</td>
+<td>
+</td>
+<td> <b>Auto power-off status</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 12
+</td>
+<td>
+</td>
+<td> <b>Auto Hold</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 13
+</td>
+<td>
+</td>
+<td> <b>Meter mode</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> L </td>
+<td> Normal
+</td></tr>
+<tr>
+<td> </td>
+<td> C </td>
+<td> Calibration
+</td></tr>
+<tr>
+<td> 14
+</td>
+<td>
+</td>
+<td> <b>Voltage alert</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 15
+</td>
+<td>
+</td>
+<td> <i>Reserved</i>
+</td></tr>
+<tr>
+<td> 16
+</td>
+<td>
+</td>
+<td> <b>Rotary switch position</b>
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 0
+</td>
+<td> Voltage AC (V) / LPF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 1
+</td>
+<td> Voltage AC (mV) / LPF
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 2
+</td>
+<td> Voltage DC / AC (V)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 3
+</td>
+<td> Voltage DC / AC (mV)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 4
+</td>
+<td> Resistance / continuity / conductance
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 5
+</td>
+<td> Diode / frequency counter
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 6
+</td>
+<td> Capacitance / temperature
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 7
+</td>
+<td> Current DC / AC (µA/mA)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 8
+</td>
+<td> Current DC / AC (A)
+</td></tr>
+<tr>
+<td>
+</td>
+<td> 9
+</td>
+<td> Square wave output
+</td></tr>
+<tr>
+<td> 17
+</td>
+<td>
+</td>
+<td> <b>Battery type</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Primary
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> Secondary (rechargeable)
+</td></tr>
+<tr>
+<td> 18
+</td>
+<td>
+</td>
+<td> <b>Battery low</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 19
+</td>
+<td>
+</td>
+<td> <b>Resolution</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> 5 digits
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> 4 digits
+</td></tr>
+<tr>
+<td> 20
+</td>
+<td>
+</td>
+<td> <b>LPF</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr>
+<tr>
+<td> 21
+</td>
+<td>
+</td>
+<td> <b>DC filter</b>
+</td></tr>
+<tr>
+<td> </td>
+<td> 0 </td>
+<td> Off
+</td></tr>
+<tr>
+<td> </td>
+<td> 1 </td>
+<td> On
+</td></tr></tbody><tfoot></tfoot></table>
+<h3><span class="mw-headline" id="LOG:">LOG:</span></h3>
+<p>Different commands can be used to retrieve the content of the 
+different log memories from the multimeter. Those commands allow to 
+retrieve log entries one by one, specifying the index of the entry to 
+retrieve each time. When the index is greater than the index of the last
+ logged value, the multimeter will return an error (<code>*E</code>). The actual commands depends on the model.
+</p><p>The response is presented as a quoted string whose length depends on the model.
+</p><p>Note that each log entry is also emitted by the multimeter whenever a new value is captured to the log.
+</p>
+<h4><span class="mw-headline" id="U123xx_models_4">U123xx models</span></h4>
+<p>The valid commands to retrieve log entries are yet to be determined.
+</p><p>Log entries are 15 characters long. Here is an example of log entry:
+</p>
+<pre>"050000210000200"
+</pre>
+<p>Note that the position of the decimal point is not explicitly given, it must be discerned from the range.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr style="background-color: red;">
+<td> 1 </td>
+<td> </td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr>
+<td> 2 </td>
+<td> </td>
+<td> <b>Function</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> AUX
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Voltage
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Microcurrent
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Current
+</td></tr>
+<tr>
+<td></td>
+<td> 5 </td>
+<td> Resistance or continuity
+</td></tr>
+<tr>
+<td></td>
+<td> 6 </td>
+<td> Diode
+</td></tr>
+<tr>
+<td></td>
+<td> 8 </td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td></td>
+<td> 9 </td>
+<td> Frequency
+</td></tr>
+<tr style="background-color: red;">
+<td> 3 </td>
+<td> </td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr>
+<td> 4 </td>
+<td> </td>
+<td> <b>First (most significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 5 </td>
+<td> </td>
+<td> <b>Second digit of measurement</b>
+</td></tr>
+<tr>
+<td> 6 </td>
+<td> </td>
+<td> <b>Third digit of measurement</b>
+</td></tr>
+<tr>
+<td> 7 </td>
+<td> </td>
+<td> <b>Fourth (least significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 8 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Autoranging is enabled
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Value is negative
+</td></tr>
+<tr>
+<td> 9 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> DC
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> AC
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Overload
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Range</b>, values are the same as with <code>CONF?</code>
+</td></tr>
+<tr style="background-color: red;">
+<td> 11 </td>
+<td> </td>
+<td> <i>Unknown (always 0)</i>
+</td></tr>
+<tr>
+<td> 12 </td>
+<td> </td>
+<td> <b>Temperature unit (probably)</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> not in temperature mode
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 1 </td>
+<td> degrees Fahrenheit (not confirmed, need to check)
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> degrees Celsius
+</td></tr>
+<tr>
+<td> 13 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Relative mode is enabled
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Trig Hold-Log mode is enabled
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Auto Hold-Log mode is enabled
+</td></tr>
+<tr>
+<td> 14 </td>
+<td> </td>
+<td> <b>Capacitance/AUX mode</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> AUX temperature (mV setting in menu is off)
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> AUX mV (mV setting in menu is on)
+</td></tr>
+<tr style="background-color: red;">
+<td> 15 </td>
+<td> </td>
+<td> <i>Unknown (always 0)</i>
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U124xC_models_2">U124xC models</span></h4>
+<p>The valid commands to retrieve log entries are:
+</p>
+<pre>LOG:HAND &lt;index&gt;
+LOG:TRIG &lt;index&gt;
+LOG:AUTO &lt;index&gt;
+LOG:EXPO &lt;index&gt;
+</pre>
+<p>Log entries are 14 characters long. Here is an example of log entry:
+</p>
+<pre>"01000241100100"
+</pre>
+<p>Note that the position of the decimal point is not explicitly given, it must be discerned from the active function and exponent.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td>1-2</td>
+<td> </td>
+<td> <b>Function</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> Millivoltage
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Voltage (averaging sense if Alternative unit flag and AC mode)
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Microcurrent (averaging sense if Alternative unit flag and AC mode)
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Current (averaging sense if Alternative unit flag and AC mode)
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Resistance (Continuity if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td> 5 </td>
+<td> Diode
+</td></tr>
+<tr>
+<td></td>
+<td> 6 </td>
+<td> Temperature in °C (or °F if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td> 7 </td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td></td>
+<td> 8 </td>
+<td> Frequency
+</td></tr>
+<tr>
+<td></td>
+<td> 9 </td>
+<td> Harmonic ratio
+</td></tr>
+<tr>
+<td></td>
+<td>10 </td>
+<td>&nbsp;%Scale of 4-20 mA (or 0-20 mA if Alternative unit flag)
+</td></tr>
+<tr>
+<td> 3 </td>
+<td> </td>
+<td> <b>First (most significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 4 </td>
+<td> </td>
+<td> <b>Second digit of measurement</b>
+</td></tr>
+<tr>
+<td> 5 </td>
+<td> </td>
+<td> <b>Third digit of measurement</b>
+</td></tr>
+<tr>
+<td> 6 </td>
+<td> </td>
+<td> <b>Fourth digit of measurement</b>
+</td></tr>
+<tr>
+<td> 7 </td>
+<td> </td>
+<td> <b>Fifth (least significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 8 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Autoranging is enabled
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Value is negative
+</td></tr>
+<tr>
+<td> 9 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> DC
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> AC
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Overload
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Exponent</b>
+</td></tr>
+<tr>
+<td> 11 </td>
+<td> </td>
+<td> <b>Mode bits (several can be set at once)</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Alternate unit flag
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Thermocouple type (0 = K, 1 = J)
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Zero temperature compensation
+</td></tr>
+<tr>
+<td> 12 </td>
+<td> </td>
+<td> <b>Hold mode</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Trig-Hold mode
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Auto-Hold mode
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Relative mode is enabled (can be combined with *-Hold mode)
+</td></tr>
+<tr>
+<td> 13 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Average
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Min
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Max
+</td></tr>
+<tr>
+<td> 14 </td>
+<td> </td>
+<td> <b>Data logging option</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> Manual Log (Hand)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Interval Log (Auto)
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Event Log (Trig)
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Export Log (Hold button)
+</td></tr></tbody><tfoot></tfoot></table>
+<p>Default exponent to be applied to the value for the different functions, in addition to the Exponent field.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Exponent
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Function
+</th></tr></thead><tbody>
+<tr>
+<td> 10e-5 </td>
+<td> Millivoltage
+</td></tr>
+<tr>
+<td> 10e-4 </td>
+<td> Voltage
+</td></tr>
+<tr>
+<td> 10e-7 </td>
+<td> Microcurrent
+</td></tr>
+<tr>
+<td> 10e-3 </td>
+<td> Current
+</td></tr>
+<tr>
+<td> 10e-2 </td>
+<td> Resistance / Continuity
+</td></tr>
+<tr>
+<td> 10e-3 </td>
+<td> Diode
+</td></tr>
+<tr>
+<td> 10e-1 </td>
+<td> Temperature (both °C and °F)
+</td></tr>
+<tr>
+<td> 10e-10</td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> 10e-2 </td>
+<td> Frequency
+</td></tr>
+<tr>
+<td> 10e-2 </td>
+<td> Harmonic ratio
+</td></tr>
+<tr>
+<td> 10e-2 </td>
+<td>&nbsp;%Scale of 4-20 mA / 0-20 mA
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U125xx_models_2">U125xx models</span></h4>
+<p>The valid commands to retrieve log entries are:
+</p>
+<pre>LOG? H&lt;index&gt;
+LOG? A&lt;index&gt;
+</pre>
+<p>Note that &lt;index&gt; must be exactly 3 digits
+</p><p>Log entries are 13 characters long. Here is an example of log entry:
+</p>
+<pre>"0522041404000"
+</pre>
+<p>Note that the position of the decimal point is not explicitly given, it must be discerned from the active function and exponent.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td>1-2</td>
+<td> </td>
+<td> <b>Function</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> Millivoltage
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Voltage
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 2 </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Current
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 4 </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td></td>
+<td> 5 </td>
+<td> Resistance (Continuity if Alternative unit flag&nbsp;?, Conductance if Locked / Manual ranging)
+</td></tr>
+<tr>
+<td></td>
+<td> 6 </td>
+<td> Diode
+</td></tr>
+<tr>
+<td></td>
+<td> 7 </td>
+<td> Temperature in °C (or °F if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td> 8 </td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td></td>
+<td> 9 </td>
+<td> Frequency
+</td></tr>
+<tr>
+<td></td>
+<td>10 </td>
+<td> Duty cycle
+</td></tr>
+<tr>
+<td></td>
+<td>11 </td>
+<td> Pulse width
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td>12 </td>
+<td> <i>Unknown</i>
+</td></tr>
+<tr>
+<td></td>
+<td>13 </td>
+<td> dBm (or dBV if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td>14 </td>
+<td>&nbsp;%Scale of 4-20 mA (or 0-20 mA if Alternative unit flag)
+</td></tr>
+<tr>
+<td> 3 </td>
+<td> </td>
+<td> <b>First (most significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 4 </td>
+<td> </td>
+<td> <b>Second digit of measurement</b>
+</td></tr>
+<tr>
+<td> 5 </td>
+<td> </td>
+<td> <b>Third digit of measurement</b>
+</td></tr>
+<tr>
+<td> 6 </td>
+<td> </td>
+<td> <b>Fourth digit of measurement</b>
+</td></tr>
+<tr>
+<td> 7 </td>
+<td> </td>
+<td> <b>Fifth (least significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 8 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 1 </td>
+<td> Locked&nbsp;? Manual ranging is enabled&nbsp;?
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Value is negative
+</td></tr>
+<tr>
+<td> 9 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> DC
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> AC
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Overload
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Exponent</b>
+</td></tr>
+<tr>
+<td> 11 </td>
+<td> </td>
+<td> <b>Mode bits (several can be set at once)</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Alternate unit flag
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Thermocouple type (0 = K, 1 = J)
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 4 </td>
+<td> Environment temperature compensation&nbsp;?
+</td></tr>
+<tr>
+<td> 12 </td>
+<td> </td>
+<td> <b>Hold mode</b>
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 1 </td>
+<td> Trig-Hold mode&nbsp;?
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 2 </td>
+<td> Peak-Hold mode&nbsp;?
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 3 </td>
+<td> Auto-hold mode&nbsp;?
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Relative mode is enabled (can be combined with *-Hold mode)
+</td></tr>
+<tr>
+<td> 13 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Average
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Min
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Max
+</td></tr>
+<tr style="background-color: red;">
+<td></td>
+<td> 8 </td>
+<td> "press"&nbsp;?
+</td></tr></tbody><tfoot></tfoot></table>
+<p>Default exponent to be applied to the value for the different functions, in addition to the Exponent field.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Exponent
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Function
+</th></tr></thead><tbody>
+<tr>
+<td> 10<sup>-7</sup> </td>
+<td> Millivoltage
+</td></tr>
+<tr>
+<td> 10<sup>-5</sup> </td>
+<td> Voltage
+</td></tr>
+<tr>
+<td> 10<sup>-7</sup> </td>
+<td> Current
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> Resistance / Continuity
+</td></tr>
+<tr>
+<td> 10<sup>-19</sup></td>
+<td> Conductance
+</td></tr>
+<tr>
+<td> 10<sup>-5</sup> </td>
+<td> Diode
+</td></tr>
+<tr>
+<td> 10<sup>-2</sup> </td>
+<td> Temperature
+</td></tr>
+<tr>
+<td> 10<sup>-13</sup></td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> Frequency
+</td></tr>
+<tr>
+<td> 10<sup>-5</sup> </td>
+<td> Duty cycle
+</td></tr>
+<tr>
+<td> 10<sup>-5</sup> </td>
+<td> Pulse width
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> dBm / dBV
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td>&nbsp;%Scale of 4-20 mA / 0-20 mA
+</td></tr></tbody><tfoot></tfoot></table>
+<h4><span class="mw-headline" id="U128xx_models_2">U128xx models</span></h4>
+<p>The valid commands to retrieve log entries are:
+</p>
+<pre>LOG:HAND &lt;index&gt;
+LOG:TRIG &lt;index&gt;
+LOG:AUTO &lt;index&gt;
+LOG:EXPO &lt;index&gt;
+</pre>
+<p>Log entries are 14 characters long. Here is an example of log entry:
+</p>
+<pre>"04235201470002"
+</pre>
+<p>Note that the position of the decimal point is not explicitly given, it must be discerned from the active function and exponent.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Byte
+</th>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Value
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td>1-2</td>
+<td> </td>
+<td> <b>Function</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> Millivoltage
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Voltage
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Microcurrent
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Current
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Resistance (Continuity if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td> 5 </td>
+<td> Diode
+</td></tr>
+<tr>
+<td></td>
+<td> 6 </td>
+<td> Temperature in °C (or °F if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td> 7 </td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td></td>
+<td> 8 </td>
+<td> Frequency
+</td></tr>
+<tr>
+<td></td>
+<td> 9 </td>
+<td> Duty cycle (positive pulse, or negative if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td>10 </td>
+<td> Pulse width (positive pulse, or negative if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td>11 </td>
+<td> dBm (or dBV if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td>12 </td>
+<td>&nbsp;%Scale of 4-20 mA (or 0-20 mA if Alternative unit flag)
+</td></tr>
+<tr>
+<td></td>
+<td>13 </td>
+<td> Conductance
+</td></tr>
+<tr>
+<td> 3 </td>
+<td> </td>
+<td> <b>First (most significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 4 </td>
+<td> </td>
+<td> <b>Second digit of measurement</b>
+</td></tr>
+<tr>
+<td> 5 </td>
+<td> </td>
+<td> <b>Third digit of measurement</b>
+</td></tr>
+<tr>
+<td> 6 </td>
+<td> </td>
+<td> <b>Fourth digit of measurement</b>
+</td></tr>
+<tr>
+<td> 7 </td>
+<td> </td>
+<td> <b>Fifth (least significant) digit of measurement</b>
+</td></tr>
+<tr>
+<td> 8 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Autoranging is enabled
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Value is negative
+</td></tr>
+<tr>
+<td> 9 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> DC
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> AC
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Overload
+</td></tr>
+<tr>
+<td> 10 </td>
+<td> </td>
+<td> <b>Exponent</b>
+</td></tr>
+<tr>
+<td> 11 </td>
+<td> </td>
+<td> <b>Mode bits (several can be set at once)</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Alternate unit flag
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Thermocouple type (0 = K, 1 = J)
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Zero temperature compensation
+</td></tr>
+<tr>
+<td> 12 </td>
+<td> </td>
+<td> <b>Hold mode</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Trig-Hold mode
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Peak-Hold mode
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Auto-hold mode
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Relative mode is enabled (can be combined with *-Hold mode)
+</td></tr>
+<tr>
+<td> 13 </td>
+<td> </td>
+<td> <b>Mode bits</b> (several can be set at once)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Average
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Min
+</td></tr>
+<tr>
+<td></td>
+<td> 4 </td>
+<td> Max
+</td></tr>
+<tr>
+<td> 14 </td>
+<td> </td>
+<td> <b>Data logging option</b>
+</td></tr>
+<tr>
+<td></td>
+<td> 0 </td>
+<td> Manual Log (Hand)
+</td></tr>
+<tr>
+<td></td>
+<td> 1 </td>
+<td> Event Log (Trig)
+</td></tr>
+<tr>
+<td></td>
+<td> 2 </td>
+<td> Interval Log (Auto)
+</td></tr>
+<tr>
+<td></td>
+<td> 3 </td>
+<td> Export Log (Hold button)
+</td></tr></tbody><tfoot></tfoot></table>
+<p>Default exponent to be applied to the value for the different functions, in addition to the Exponent field.
+</p>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Exponent
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Function
+</th></tr></thead><tbody>
+<tr>
+<td> 10<sup>-6</sup> </td>
+<td> Millivoltage
+</td></tr>
+<tr>
+<td> 10<sup>-4</sup> </td>
+<td> Voltage
+</td></tr>
+<tr>
+<td> 10<sup>-9</sup> </td>
+<td> Microcurrent
+</td></tr>
+<tr>
+<td> 10<sup>-4</sup> </td>
+<td> Current
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> Resistance / Continuity
+</td></tr>
+<tr>
+<td> 10<sup>-4</sup> </td>
+<td> Diode
+</td></tr>
+<tr>
+<td> 10<sup>-1</sup> </td>
+<td> Temperature °C
+</td></tr>
+<tr>
+<td> 10<sup>-2</sup> </td>
+<td> Temperature °F
+</td></tr>
+<tr>
+<td> 10<sup>-12</sup></td>
+<td> Capacitance
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> Frequency
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> Duty cycle
+</td></tr>
+<tr>
+<td> 10<sup>-6</sup> </td>
+<td> Pulse width
+</td></tr>
+<tr>
+<td> 10<sup>-3</sup> </td>
+<td> dBm / dBV
+</td></tr>
+<tr>
+<td> 10<sup>-2</sup> </td>
+<td>&nbsp;%Scale of 4-20 mA / 0-20 mA
+</td></tr>
+<tr>
+<td> 10<sup>-11</sup></td>
+<td> Conductance
+</td></tr></tbody><tfoot></tfoot></table>
+<h3><span class="mw-headline" id="Event_Notifiers">Event Notifiers</span></h3>
+<table style="font-size: smaller" class="alternategrey sortable sigroktable jquery-tablesorter" width="95%" border="0">
+
+<thead><tr>
+<th style="width: 3em;" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> String
+</th>
+<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"> Meaning
+</th></tr></thead><tbody>
+<tr>
+<td> <code>*0</code> through <code>*7</code>
+</td>
+<td> Rotary switch position has changed. <code>*0</code> denotes the 
+most counter-clockwise position (excluding the OFF position), then the 
+value is increased by one for each step in the rotary switch's range. On
+ the U127xx models the codes range from <code>*0</code> through <code>*10</code>.
+</td></tr>
+<tr>
+<td> <code>*B</code>
+</td>
+<td> Battery voltage dropped to "battery empty" level.
+</td></tr>
+<tr>
+<td> <code>*E</code>
+</td>
+<td> Invalid command.
+</td></tr>
+<tr>
+<td> <code>*I</code>
+</td>
+<td> Probes are connected to the wrong sockets for this mode, "Cerr" is shown on display (not supported on U123xx; it <i>is</i> supported on U124xC, U127xx and U128xx).
+</td></tr>
+<tr>
+<td> <code>*L</code>
+</td>
+<td> A button was pressed (not supported on U123xx, U124xC, U127xx and 
+U128xx). This notifier is only sent once after a command, even if the 
+user presses several buttons.
+</td></tr></tbody><tfoot></tfoot></table>
+<h2><span class="mw-headline" id="Resources">Resources</span></h2>
+<ul><li> <a rel="nofollow" class="external text" href="http://www.keysight.com/en/pc-1000004008%3Aepsg%3Apgr/handheld-digital-multimeter-clamp-and-calibrator-meters">Series overview</a></li>
+<li> <a rel="nofollow" class="external text" href="http://www.keysight.com/main/facet.jspx?c=181653.i.1&amp;to=80029.k.0">Documentation</a></li></ul>
+
+<!-- 
+NewPP limit report
+Cached time: 20200816160829
+Cache expiry: 86400
+Dynamic content: false
+CPU time usage: 0.077 seconds
+Real time usage: 0.078 seconds
+Preprocessor visited node count: 121/1000000
+Preprocessor generated node count: 128/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:2848-0!*!0!!en!*!* and timestamp 20200816160829 and revision id 14731
+ -->
+</div>					<div class="printfooter">
+						Retrieved from "<a dir="ltr" href="https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;oldid=14731">https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;oldid=14731</a>"					</div>
+				<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>				<div class="visualClear"></div>
+							</div>
+		</div>
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-login"><a href="https://sigrok.org/w/index.php?title=Special:UserLogin&amp;returnto=Agilent+U12xxx+series" title="You are encouraged to log in; however, it is not mandatory [Alt+Shift+o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+															<li id="ca-nstab-main" class="selected"><span><a href="https://sigrok.org/wiki/Agilent_U12xxx_series" title="View the content page [Alt+Shift+c]" accesskey="c">Page</a></span></li>
+															<li id="ca-talk" class="new"><span><a href="https://sigrok.org/w/index.php?title=Talk:Agilent_U12xxx_series&amp;action=edit&amp;redlink=1" title="Discussion about the content page [Alt+Shift+t]" accesskey="t" rel="discussion">Discussion</a></span></li>
+													</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<h3 id="p-variants-label" tabindex="0">
+							<span>Variants</span><a href="#" tabindex="-1"></a>
+						</h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+															<li id="ca-view" class="selected"><span><a href="https://sigrok.org/wiki/Agilent_U12xxx_series">Read</a></span></li>
+															<li id="ca-viewsource"><span><a href="https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;action=edit" title="This page is protected.
+You can view its source [Alt+Shift+e]" accesskey="e">View source</a></span></li>
+															<li id="ca-history" class="collapsible"><span><a href="https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;action=history" title="Past revisions of this page [Alt+Shift+h]" accesskey="h">View history</a></span></li>
+													</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label" style="">
+						<h3 id="p-cactions-label" tabindex="0"><span>More</span><a href="#" tabindex="-1"></a></h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+
+						<form action="/w/index.php" id="searchform">
+							<div id="simpleSearch">
+							<input type="search" name="search" placeholder="Search sigrok" title="Search sigrok [Alt+Shift+f]" accesskey="f" id="searchInput" tabindex="1" autocomplete="off"><input type="hidden" value="Special:Search" name="title"><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton">							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="https://sigrok.org/wiki/Main_Page" title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id="p-navigation" aria-labelledby="p-navigation-label">
+			<h3 id="p-navigation-label">Navigation</h3>
+
+			<div class="body">
+									<ul>
+						<li id="n-Home"><a href="https://sigrok.org/wiki/Main_Page">Home</a></li><li id="n-Downloads"><a href="https://sigrok.org/wiki/Downloads">Downloads</a></li><li id="n-Hardware-support"><a href="https://sigrok.org/wiki/Supported_hardware">Hardware support</a></li><li id="n-File-formats"><a href="https://sigrok.org/wiki/Input_output_formats">File formats</a></li><li id="n-Protocol-decoders"><a href="https://sigrok.org/wiki/Protocol_decoders">Protocol decoders</a></li><li id="n-Developers"><a href="https://sigrok.org/wiki/Developers">Developers</a></li><li id="n-FAQ"><a href="https://sigrok.org/wiki/FAQ">FAQ</a></li><li id="n-Blog"><a href="https://www.sigrok.org/blog" rel="nofollow">Blog</a></li><li id="n-recentchanges"><a href="https://sigrok.org/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [Alt+Shift+r]" accesskey="r">Recent changes</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-tb" aria-labelledby="p-tb-label">
+			<h3 id="p-tb-label">Tools</h3>
+
+			<div class="body">
+									<ul>
+						<li id="t-whatlinkshere"><a href="https://sigrok.org/wiki/Special:WhatLinksHere/Agilent_U12xxx_series" title="A list of all wiki pages that link here [Alt+Shift+j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="https://sigrok.org/wiki/Special:RecentChangesLinked/Agilent_U12xxx_series" rel="nofollow" title="Recent changes in pages linked from this page [Alt+Shift+k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="https://sigrok.org/wiki/Special:SpecialPages" title="A list of all special pages [Alt+Shift+q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;printable=yes" rel="alternate" title="Printable version of this page [Alt+Shift+p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;oldid=14731" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="https://sigrok.org/w/index.php?title=Agilent_U12xxx_series&amp;action=info" title="More information about this page">Page information</a></li>					</ul>
+							</div>
+		</div>
+				</div>
+		</div>
+		<div id="footer" role="contentinfo">
+							<ul id="footer-info">
+											<li id="footer-info-lastmod"> This page was last edited on 29 December 2019, at 16:27.</li>
+									</ul>
+							<ul id="footer-places">
+											<li id="footer-places-privacy"><a href="https://sigrok.org/wiki/Sigrok:Privacy_policy" title="Sigrok:Privacy policy">Privacy policy</a></li>
+											<li id="footer-places-about"><a href="https://sigrok.org/wiki/Sigrok:About" title="Sigrok:About">About sigrok</a></li>
+											<li id="footer-places-disclaimer"><a href="https://sigrok.org/wiki/Sigrok:General_disclaimer" title="Sigrok:General disclaimer">Disclaimers</a></li>
+									</ul>
+										<ul id="footer-icons" class="noprint">
+											<li id="footer-poweredbyico">
+							<a href="https://www.mediawiki.org/"><img src="Agilent%20U12xxx%20series%20-%20sigrok_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/w/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /w/resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"></a>						</li>
+									</ul>
+						<div style="clear:both"></div>
+		</div>
+		<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.077","walltime":"0.078","ppvisitednodes":{"value":121,"limit":1000000},"ppgeneratednodes":{"value":128,"limit":1000000},"postexpandincludesize":{"value":0,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"timingprofile":["100.00%    0.000      1 -total"]},"cachereport":{"timestamp":"20200816160829","ttl":86400,"transientcontent":false}}});});</script><script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":146});});</script>
+	
+
+<div style="display: none; font-size: 13px;" class="suggestions"><div class="suggestions-results"></div><div class="suggestions-special"></div></div></body></html>
