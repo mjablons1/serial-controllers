@@ -172,7 +172,7 @@ class Device:
         return channels
             
 
-class AgilentU12Dmm(Device):
+class AgilentU12xxxDmm(Device):
     """
     Agilent U12xxx DMM basic controller
     """
@@ -405,7 +405,7 @@ class RohdeHmp2ChPsu(RohdeHmp4ChPsu):
 
 class Fluke28xDmm(Device):
     """
-    Fluke 289 DMM basic controller
+    Fluke 28x DMM basic controller
     """
 
     DEFAULTS = {'write_termination': '\r',
@@ -462,12 +462,11 @@ class Tti3ChPsu(Device):
     """
     TTI 3 channel PSU basic controller
     """
-    DEFAULTS = {'write_termination': '\n', #TODO double check bare IDN response from command line
+    DEFAULTS = {'write_termination': '\n',
                 'read_termination': '\r\n',
                 'encoding': 'ascii',
                 'baudrate': 9600,
                 'read_timeout': 1,
-                # need to be set short because this device does not confirm setting querries by default (no \n sign is sent back so readline() is blocking after each setting command)
                 'write_timeout': 1,
                 }
 
@@ -611,83 +610,102 @@ class Tti1ChPsu(Tti3ChPsu):
     """
     MAX_CHANNELS = 1
 
+class TtiQL2ChPsu(Tti2ChPsu):
+    """
+    TTI QL564TP / QL355TP  2 channel PSU basic controller
+    """
+    DEFAULTS = {'write_termination': '\n',
+                'read_termination': '\r\n',
+                'encoding': 'ascii',
+                'baudrate': 19200,  # QL series is fixed at higher baud rate by default
+                'read_timeout': 1,
+                'write_timeout': 1,
+                }
+
+class TtiQL1ChPsu(TtiQL2ChPsu):
+    """
+    TTI QL564P / QL355P 1 channel PSU basic controller
+    """
+    MAX_CHANNELS = 1
+
 
 if __name__ == '__main__':
-    
+
+    pass
     # AGILENT DMM TESTING STARTS HERE
     
-    dmm1 = AgilentU12Dmm('COM9') #<---- Remember to change the port
-    dmm1.initialize()
-    print(f'Device class{dmm1.__class__.__name__} ({dmm1.port})\n ID: {dmm1.id}\n')
-
-    primary_reading, primary_units = dmm1.get_input(1)
-    secondary_reading, secondary_units = dmm1.get_input(2)
-
-    print(f' CH1_READING:{primary_reading} {primary_units}\n CH2_READING:{secondary_reading} {secondary_units}\n')
-    dmm1.finalize()
+    # dmm1 = AgilentU12xxxDmm('COM9') #<---- Remember to change the port
+    # dmm1.initialize()
+    # print(f'Device class{dmm1.__class__.__name__} ({dmm1.port})\n ID: {dmm1.id}\n')
+    #
+    # primary_reading, primary_units = dmm1.get_input(1)
+    # secondary_reading, secondary_units = dmm1.get_input(2)
+    #
+    # print(f' CH1_READING:{primary_reading} {primary_units}\n CH2_READING:{secondary_reading} {secondary_units}\n')
+    # dmm1.finalize()
     
     # ROHDE PSU DEMO STARTS HERE
-    
-#    psu1 = RohdeHmp4ChPsu('COM12')
-#    psu1.initialize()
-#    print(f'Device class {psu1.__class__.__name__} ({psu1.port})\n ID: {psu1.id}\n')
-#    
-#    psu1.set_output(1,voltage=1, current=0.555)
-#    psu1.set_output(2,voltage=2, current=0.556)
-#    psu1.set_output(3,voltage=3, current=0.557)
-#    psu1.set_output(4,voltage=4, current=0.558)
-#    
-#    psu1.engage_output(1) # you will be prompted if you really wish to continue under current settings
-#    sleep(2)
-#    
-#    psu1.engage_output(2) #repeating request will cause all other channels to reset (shut down).
-#    sleep(2)
-#    
-#    psu1.engage_output((1, 2, 3)) # all channel outputs in the tuple will engage at the same instance
-#    sleep(2)
-#    
-#    for chanel in (1, 2, 3, 4):
-#        volts, v_unit, current, i_unit = psu1.get_input(chanel)
-#        print(f' Ch:{chanel} reading:{volts}{v_unit} and {current}{i_unit}\n')
-#    
-#    psu1.disengage_output((1, 2, 3)) # channels should disengage pretty much at the same instance
-#    sleep(2)
-#    
-#    psu1.engage_output((1, 2))
-#    sleep(2)
-#
-#    psu1.set_output(1, voltage=2, current=1) # NOTE: you can manipulate output settings on an engaged output.
-#    Do so at your own risk!
-#    
-#    psu1.disengage_output() # this definitely, immediately shuts down all channels simultaneously
-#    psu1.finalize()
-    
-    # FLUKE DMM DEMO STARTS HERE
-    
-#    dmm2 = Fluke28xDmm('COM13') #<---- Remember to change the port
-#    dmm2.initialize()
-#    print(f'Device class{dmm2.__class__.__name__} ({dmm2.port})\n ID: {dmm2.id}\n')   
-#
-#    reading, units = dmm2.get_input()
-#
-#    print(f' CH1_READING:{reading} {units}\n')
-#    dmm2.finalize()
-    
-    # Tti3ChPsu DEMO STARTS HERE
-    
-#    psu2 = Tti3ChPsu('COM10')
-#    psu2.initialize()
-#    sleep(2)
-#    psu2.set_output(1,voltage=1,current=0.1)
-#    psu2.set_output(2,voltage=2,current=0.2)
-#    sleep(2)
-#    psu2.engage_output((1,2))
-#    sleep(2)
-#    print(psu2.get_input(1))
-#    sleep(2)
-#    psu2.disengage_output(2)
-#    sleep(2)
-#    psu2.disengage_output()
-#    sleep(2)
-#    psu2.finalize()
+
+   # psu1 = RohdeHmp4ChPsu('COM12')
+   # psu1.initialize()
+   # print(f'Device class {psu1.__class__.__name__} ({psu1.port})\n ID: {psu1.id}\n')
+   #
+   # psu1.set_output(1,voltage=1, current=0.555)
+   # psu1.set_output(2,voltage=2, current=0.556)
+   # psu1.set_output(3,voltage=3, current=0.557)
+   # psu1.set_output(4,voltage=4, current=0.558)
+   #
+   # psu1.engage_output(1) # you will be prompted if you really wish to continue under current settings
+   # sleep(2)
+   #
+   # psu1.engage_output(2) #repeating request will cause all other channels to reset (shut down).
+   # sleep(2)
+   #
+   # psu1.engage_output((1, 2, 3)) # all channel outputs in the tuple will engage at the same instance
+   # sleep(2)
+   #
+   # for chanel in (1, 2, 3, 4):
+   #     volts, v_unit, current, i_unit = psu1.get_input(chanel)
+   #     print(f' Ch:{chanel} reading:{volts}{v_unit} and {current}{i_unit}\n')
+   #
+   # psu1.disengage_output((1, 2, 3)) # channels should disengage pretty much at the same instance
+   # sleep(2)
+   #
+   # psu1.engage_output((1, 2))
+   # sleep(2)
+   #
+   # psu1.set_output(1, voltage=2, current=1) # NOTE: you can manipulate output settings on an engaged output.
+   # Do so at your own risk!
+   #
+   # psu1.disengage_output() # this definitely, immediately shuts down all channels simultaneously
+   # psu1.finalize()
+   #
+   #  FLUKE DMM DEMO STARTS HERE
+   #
+   # dmm2 = Fluke28xDmm('COM13') #<---- Remember to change the port
+   # dmm2.initialize()
+   # print(f'Device class{dmm2.__class__.__name__} ({dmm2.port})\n ID: {dmm2.id}\n')
+   #
+   # reading, units = dmm2.get_input()
+   #
+   # print(f' CH1_READING:{reading} {units}\n')
+   # dmm2.finalize()
+   #
+   #  Tti3ChPsu DEMO STARTS HERE
+   #
+   # psu2 = Tti3ChPsu('COM10')
+   # psu2.initialize()
+   # sleep(2)
+   # psu2.set_output(1,voltage=1,current=0.1)
+   # psu2.set_output(2,voltage=2,current=0.2)
+   # sleep(2)
+   # psu2.engage_output((1,2))
+   # sleep(2)
+   # print(psu2.get_input(1))
+   # sleep(2)
+   # psu2.disengage_output(2)
+   # sleep(2)
+   # psu2.disengage_output()
+   # sleep(2)
+   # psu2.finalize()
     
