@@ -48,7 +48,7 @@ NOTE: Some versions of below devices may require adjustments due to inconsistenc
 | Rohde & Schwarz | HMP4040 | RohdeHmp4ChPsu | * | |
     
 ## Acknowledgements
-1) The base class is based on a modified SimpleDaq class from Python For the Lab materials. [link to source](https://github.com/aquilesC/SimpleDaq/blob/master/PythonForTheLab/Controller/simple_daq.py)
+1) The base class relies on a modified SimpleDaq class from Python For the Lab materials. [link to source](https://github.com/aquilesC/SimpleDaq/blob/master/PythonForTheLab/Controller/simple_daq.py)
 2) Sigrok website where lots of devices protocols are reverse-engineered. Beautiful middle finger solution in case your hw supplier refuses to cooperate. [Sigrok homepage](https://sigrok.org/wiki/Main_Page)
     
 
