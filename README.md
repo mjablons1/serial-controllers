@@ -5,16 +5,46 @@ The controller classes support only the most basic and routinely used functional
 ## Example DMM use
 
 ```python
-from serial_cntrollers import AgilentU12xxxDmm
+from serial_controllers import AgilentU12xxxDmm
 
-dmm1 = AgilentU12xxxDmm('COM9') #<-- Remember to change the port
-dmm1.initialize()
+dmm = AgilentU12xxxDmm('COM9') #<-- Remember to change the port
+dmm.initialize()
 
-primary_reading, primary_units = dmm1.get_input(1)
-secondary_reading, secondary_units = dmm1.get_input(2)
+primary_reading, primary_unit = dmm.get_input(1)
+secondary_reading, secondary_unit = dmm.get_input(2)
 
-print(f' CH1_READING:{primary_reading} {primary_units}\n CH2_READING:{secondary_reading} {secondary_units}\n')
-dmm1.finalize()
+print(f' CH1_READING:{primary_reading} {primary_unit}\n CH2_READING:{secondary_reading} {secondary_unit}\n')
+dmm.finalize() # releases serial resource
+```
+
+## Example PSU use
+
+```python
+from serial_controllers import Tti2ChPsu
+from time import sleep
+
+psu = Tti2ChPsu('COM10') #<-- Remember to change the port
+psu.initialize()
+
+psu.set_output(1, voltage=1.2, current=0.01)
+psu.set_output(2, voltage=2.2, current=0.02)
+
+psu.engage_output((1, 2)) # engages output on channel 1 and 2 after user approval
+sleep(2)
+
+psu.disengage_output(1) # disengages only output 1 (output 2 remains engaged)
+sleep(2)
+
+psu.engage_output(2, seek_permission=False) # after this only channel 2 will be engaged and without user approval!
+sleep(2)
+
+volts, v_unit, current, i_unit = psu.get_input(2)
+print(f'Reading:{volts}{v_unit} and {current}{i_unit}\n')
+
+psu.set_output(2, voltage=3, current=0.03) # WARNING!: You can manipulate levels on engaged output.
+
+psu.disengage_output() # this immediately shuts down all engaged channels simultaneously
+psu.finalize() # releases serial resource
 ```
 
 ## Currently supported devices 
