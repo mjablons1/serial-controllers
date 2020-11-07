@@ -370,8 +370,8 @@ class RohdeHmp4ChPsu(Device):
         Disengage outputs on specif channels at once.
         Parameters
         ----------
-        channels : tuple of integers
-            numbers of output channels to disengage, when not passed all outputs will be disengaged
+        channels : int or tuple of integers
+            number(s) of output channel(s) to disengage, when not passed all outputs will be disengaged
         Returns
         -------
             None
@@ -572,8 +572,8 @@ class Tti3ChPsu(Device):
         Disengage outputs on specif channels at once.
         Parameters
         ----------
-        channels : tuple of integers
-            numbers of output channels to disengage, when not passed all outputs will be disengaged
+        channels : int or tuple of integers
+            number(s) of output channel(s) to disengage, when not passed all outputs will be disengaged
         Returns
         -------
             None
