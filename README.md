@@ -8,6 +8,8 @@ The controller classes support only the most basic and routinely used functional
 from serial_controllers import AgilentU12xxxDmm
 
 dmm = AgilentU12xxxDmm('COM9') #<-- Remember to change the port
+## Not sure which port name to type in?
+## Try this script! -> https://github.com/mjablons1/scpi-hw-discovery
 dmm.initialize()
 
 primary_reading, primary_unit = dmm.get_input(1)
@@ -24,6 +26,8 @@ from serial_controllers import Tti2ChPsu
 from time import sleep
 
 psu = Tti2ChPsu('COM10') #<-- Remember to change the port
+## Not sure which port name to type in?
+## Try this script! -> https://github.com/mjablons1/scpi-hw-discovery
 psu.initialize()
 
 psu.set_output(1, voltage=1.2, current=0.01)
