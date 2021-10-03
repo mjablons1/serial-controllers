@@ -10,8 +10,13 @@ except ImportError as exc1:
     socket = None
 
 
-class BaseDevice: # TODO Turn this into base class with ABC?
+class BaseDevice:  # TODO Turn this into base class with ABC?
     """Prototype class for a device"""
+    # TODO : create some example keys for DEFAULTS dict for illustration
+    DEFAULTS = dict()  # normally used to store communication settings matching to a specific device defaults
+    MAX_CHANNELS = 1  # number of independent measurement channels or outputs present in the device. A
+    # device with no selectable measurement channels/outputs is understood to be a 1 channel device.
+
     def __init__(self):
         """ Not much to do here beside eventual attribute assignment. Use initialize to establish the actual
         connection to the device so that no new instance is immediately creating that workload. """
@@ -67,6 +72,70 @@ class BaseDevice: # TODO Turn this into base class with ABC?
         """ Tear down whatever hardware communication established in the initialize method."""
         pass
 
+    def channel_exists(self, channel):
+        """
+        True if channel exits on this class
+        Parameters
+        ----------
+        channel : int - channel number
+
+        Returns
+        -------
+
+        """
+        if 0 < channel <= self.MAX_CHANNELS:
+            return True
+        else:
+            return False
+
+    def _channel_arg_check(self, channel_s, expected_type=int):
+        """
+        Checks if channels is of the expected_type (either int or tuple of ints) and checks that none of the ints
+        exceed the number of channels for this device.
+        Parameters
+        ----------
+        channel_s :  int or tuple of ints - number(s) of measurement / output channels
+        expected_type : type int or tuple
+
+        Returns
+        -------
+        None
+
+        """
+        self.type_check(channel_s, expected_type)
+
+        if expected_type is int:
+            channel_s = (channel_s,)  # pack into a tuple to pass through the following test as iterable
+        if expected_type is tuple:
+            for channel in channel_s:
+                self.type_check(channel, int)
+                if not self.channel_exists(channel):
+                    raise ValueError(f'This device does not support channel {channel}')
+
+    @staticmethod
+    def type_check(an_object, expected_type):
+        """
+        Raises TypeError if an_object is of type other than expected_type.
+        Parameters
+        ----------
+            an_object, : any
+            expected_type : type any
+
+        Returns
+        -------
+            None
+        """
+        if not isinstance(an_object, expected_type):
+            raise TypeError(f'Expected type {expected_type} but received {an_object} {type(an_object)}.')
+
+    @staticmethod
+    def is_iterable(an_object):
+        try:
+            iter(an_object)
+        except TypeError:
+            return False
+        return True
+
 
 class SerialDevice(BaseDevice):
 
@@ -92,7 +161,7 @@ class SerialDevice(BaseDevice):
                 'write_timeout': 1,
                 }
 
-    MAX_CHANNELS = 2
+    MAX_CHANNELS = 2  # TODO not sure if there is any good reason to override here
 
     def __init__(self, port):
         super().__init__()
@@ -191,10 +260,25 @@ class SerialDevice(BaseDevice):
         # ans = self.rsc.readline() # readline() assumes \n as escape character causing read timeout on devices that
         # use any other read termination character.
         escape_char = bytes(self.DEFAULTS['read_termination'], self.DEFAULTS['encoding'])
-        ans = self.rsc.read_until(escape_char) # ... this is why read_until is used
-        #print(f'##### Raw answer is: {ans}') #debug only
+        ans = self.rsc.read_until(escape_char)  # ... this is why read_until is used
+        # print(f'##### Raw answer is: {ans}') #debug only
         ans = ans.decode(self.DEFAULTS['encoding']).strip()
         return ans
+
+    # TODO this should be superfluous because parent implements this already, but for some reason, after removing
+    #  _query from here, pyCharm checker complains that _query() 'does not return anything(?)' whenever child calls it.
+    def _query(self, message):
+        """ Write a message and read the response in one method.
+        Parameters
+        ----------
+        message : str
+            message to send to the device
+        Returns
+        -------
+            str whatever the output message
+        """
+        self._write(message)
+        return self._read()
 
     def finalize(self):
         """
@@ -207,31 +291,6 @@ class SerialDevice(BaseDevice):
             self.rsc.close()
             self.rsc = None
             print(f'({self.port}) Released resource:\n {self.id}')
-
-    def _arg_check(self, channels):
-        """
-        If channels is tuple it returns it without change. If channels is an int it places it inside a tuple.
-        For any other type TypeError is raised.
-        Parameters
-        ----------
-        channels : int or tuple
-
-        Returns
-        -------
-            tuple
-        """
-        if isinstance(channels, tuple):
-            pass
-        elif isinstance(channels, int):
-            channels = tuple([channels])
-        else:
-            raise TypeError(f'Incorrect argument type for channels ({channels})')
-
-        for channel in channels:
-            if channel > self.MAX_CHANNELS:
-                raise ValueError(f'This device does not support channel {channel}')
-
-        return channels
 
 
 class AgilentU12xxxDmm(SerialDevice):
@@ -254,28 +313,27 @@ class AgilentU12xxxDmm(SerialDevice):
         Get current reading
         Parameters
         ----------
-        channel : int or tuple
+        channel : int
             1 - gets primary display reading
             2 - gets secondary display reading
-            (1,2) - will not raise errors but gets secondary reading only
         Returns
         -------
             tuple of strings with measurement reading and corresponding unit of measure
         """
-        channels = self._arg_check(channel)
-        for ch in channels:
-            if ch == 1:
-                reading_message = 'FETC?'
-                unit_message = 'CONF?'
-            elif ch == 2:
-                reading_message = 'FETC? @3'
-                unit_message = 'CONF? @3'
-            else:
-                raise TypeError(f'Device does not support channel {ch}.')
 
-            reading = self._query(reading_message)
-            unit = self._query(unit_message)
+        self._channel_arg_check(channel, expected_type=int)
 
+        reading_message = 'FETC?'
+        unit_message = 'CONF?'
+
+        if channel == 1:
+            pass
+        elif channel == 2:
+            reading_message += ' @3'  # with some other DMM numbers it could be ' @2', you may have to experiment.
+            unit_message += ' @3'
+
+        reading = self._query(reading_message)
+        unit = self._query(unit_message)
         # output format strongly depends on device type, more here: https://sigrok.org/wiki/Agilent_U12xxx_series
 
         return reading, unit
@@ -307,26 +365,23 @@ class RohdeHmp4ChPsu(SerialDevice):
         Get voltage and current readings from a channel
         Parameters
         ----------
-        channel : int or tuple
+        channel : int
             channel number
         Returns
         -------
             tuple of strings containing the channel reading and corresponding units of measure
         """
-        channel_set = self._arg_check(channel)
+        self._channel_arg_check(channel, expected_type=int)
 
-        for ch_nr in channel_set:
-            # select channel
-            self._write(f'INST:NSEL {str(ch_nr)}')
-            # query measurements
-            voltage = self._query('MEAS:VOLT?')
-            current = self._query('MEAS:CURR?')
+        self._write(f'INST:NSEL {str(channel)}')
+        voltage = self._query('MEAS:VOLT?')
+        current = self._query('MEAS:CURR?')
 
         return voltage, 'Volt', current, 'Amp'
 
-    def set_output(self, channels, voltage=0.0, current=0.0):
+    def set_output(self, channel, voltage=0.0, current=0.0):
         """
-        Set output voltage and current limits at specific channel(s)
+        Set output voltage and current limits at a specific channel
 
         NOTE: be careful when changing voltage and current settings when outputs are engaged. There may also be a time
         delay between setting voltage and current limit that can cause transient state which could be dangerous
@@ -334,8 +389,8 @@ class RohdeHmp4ChPsu(SerialDevice):
 
         Parameters
         ----------
-        channels : int or tuple
-            channel number(s)
+        channel : int
+            channel number
         voltage : float
             channel voltage limit in volts
         current : float
@@ -344,16 +399,16 @@ class RohdeHmp4ChPsu(SerialDevice):
         -------
             None
         """
-        channels = self._arg_check(channels)
-        for ch in channels:
-            # select the channel
-            self._write(f'INST:NSEL {str(ch)}')
-            # set output levels
-            self._write(f"VOLT {str(voltage)}{self.DEFAULTS['write_termination']}CURR {str(current)}")  # TODO second write termination missing?
+        self._channel_arg_check(channel, expected_type=int)
+
+        self._write(f'INST:NSEL {str(channel)}')
+        # set output levels
+        self._write(f"VOLT {str(voltage)}{self.DEFAULTS['write_termination']}CURR {str(current)}")
+        # TODO second write termination missing?
 
     def engage_output(self, channels, seek_permission=True):
         """
-        Engage outputs on specific channels with user permission
+        Engage outputs on specific channel(s) with or without user permission.
         Parameters
         ----------
         channels : int or tuple
@@ -366,13 +421,18 @@ class RohdeHmp4ChPsu(SerialDevice):
             int 1 - output engage command sent
                 0 - output engage command was not sent because user permission was not granted
         """
-        channels = self._arg_check(channels)
+
+        if type(channels) is int:
+            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
+
+        self._channel_arg_check(channels, expected_type=tuple)
+
         self.disengage_output()
         self._activate_channels(channels)
         for channel in channels:
             # select channel
             self._write(f'INST:NSEL {str(channel)}')
-            # query output setting
+            # query input level settings to inform user prior to seeking permission.
             sel_voltage = self._query('VOLT?')
             sel_current = self._query('CURR?')
             print(f'Ch:{channel} is activated at:\n'
@@ -392,17 +452,18 @@ class RohdeHmp4ChPsu(SerialDevice):
         Deactivate all channels 'at once'.
         Parameters
         ----------
-        channels - tuple
+        channels - tuple or int
             numbers of channels
         Returns
         -------
             None
         """
+
         long_msg = []
-        channels = self._arg_check(channels)
         for channel in channels:
-            long_msg.append(f"INST:NSEL {str(channel)}{self.DEFAULTS['write_termination']}OUTP:SEL 0{self.DEFAULTS['write_termination']}")
-            # TODO - a workaround to get the selected channels to shut down as much together as possible (separate
+            long_msg.append(f'INST:NSEL {str(channel)}{self.DEFAULTS["write_termination"]}OUTP:SEL 0'
+                            f'{self.DEFAULTS["write_termination"]}')
+            #  This is a workaround to get the selected channels to shut down as much together as possible (separate
             #  queries can take long and that can lead to in-between outputs state that user may not expect).
             #  SCPI standard allows to separate commands with semicolon (;) to send more commands in a single message
             #  but this device does not seem to support that.
@@ -419,24 +480,31 @@ class RohdeHmp4ChPsu(SerialDevice):
         -------
         None
         """
+
         for channel in channels:
             # select channel
             self._write(f'INST:NSEL {str(channel)}')
             # activate channel
             self._write('OUTP:SEL 1')
 
-    def disengage_output(self, channels='all'):
+    def disengage_output(self, channels=tuple(range(1, MAX_CHANNELS+1))):
         """
         Disengage outputs on specif channels at once.
         Parameters
         ----------
-        channels : int or tuple of integers
+        channels : tuple of int
             number(s) of output channel(s) to disengage, when not passed all outputs will be disengaged
         Returns
         -------
             None
         """
-        if channels is 'all':
+
+        if type(channels) is int:
+            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
+
+        self._channel_arg_check(channels, expected_type=tuple)
+
+        if channels == tuple(range(1, self.MAX_CHANNELS+1)):
             self._disengage_all_outputs()
         else:  # deactivate only the specific outputs
             self._deactivate_channels(channels)
@@ -448,8 +516,9 @@ class RohdeHmp4ChPsu(SerialDevice):
         -------
             None
         """
-        self._write('OUTP:GEN 0') # immediate shut down of all outputs
+        self._write('OUTP:GEN 0')  # immediate shut down of all outputs
         self._deactivate_channels()
+
 
 class RohdeHmp3ChPsu(RohdeHmp4ChPsu):
     """
@@ -457,11 +526,13 @@ class RohdeHmp3ChPsu(RohdeHmp4ChPsu):
     """
     MAX_CHANNELS = 3
 
+
 class RohdeHmp2ChPsu(RohdeHmp4ChPsu):
     """
     Rohde & Shwarz HMP2020 basic controller
     """
     MAX_CHANNELS = 2
+
 
 class Fluke28xDmm(SerialDevice):
     """
@@ -494,25 +565,24 @@ class Fluke28xDmm(SerialDevice):
         Get current primary display reading.
         Parameters
         ----------
-        channel : int or tuple
+        channel : int
             1 - get primary display reading
                 Currently only primary display reading is supported
         Returns
         -------
             tuple of strings with measurement reading and device specific representation of the unit
         """
-        channels = self._arg_check(channel)
-        for _ in channels:
-            self._query('QM')
-            ans = self._read()
-            ans_list = [item.strip() for item in ans.split(',')]
-            reading = ans_list[0]
-            unit = ans_list[1]
+        self._channel_arg_check(channel, expected_type=int)
+        self._query('QM')
+        ans = self._read()
+        ans_list = [item.strip() for item in ans.split(',')]
+        reading = ans_list[0]
+        unit = ans_list[1]
 
         return reading, unit
 
     def set_output(self, channel, output_value):
-        print(f'Device class {self.__class__.__name__} does not allow control of its output\n')
+        print(f'Device class {self.__class__.__name__} does not allow control of its output.\n')
 
 
 class Tti3ChPsu(SerialDevice):
@@ -538,21 +608,23 @@ class Tti3ChPsu(SerialDevice):
         Get voltage and current reading from a channel.
         Parameters
         ----------
-        channel - int or tuple
+        channel - int
             channel number
         Returns
         -------
             tuple of strings containing the measurement reading and corresponding unit of measure
         """
 
+        self._channel_arg_check(channel, expected_type=int)
+
         voltage = self._query(f'V{str(channel)}O?')[:-1]
         current = self._query(f'I{str(channel)}O?')[:-1]
 
         return voltage, 'Volt', current, 'Amp'
 
-    def set_output(self, channels, voltage=0.0, current=0.0):
+    def set_output(self, channel, voltage=0.0, current=0.0):
         """
-        Set output voltage and current limits at specific channel(s)
+        Set output voltage and current limits at specific channel
 
         NOTE: be careful when changing voltage and current settings when outputs are engaged. There may also be a time
         delay between setting voltage and current limit that can cause transient state which could be dangerous
@@ -560,7 +632,7 @@ class Tti3ChPsu(SerialDevice):
 
         Parameters
         ----------
-        channels : int or tuple
+        channel : int
             channel number(s)
         voltage : float
             channel voltage limit in volts
@@ -570,17 +642,17 @@ class Tti3ChPsu(SerialDevice):
         -------
             None
         """
+
+        self._channel_arg_check(channel, expected_type=int)
         # set output levels
-        channels = self._arg_check(channels)
-        for channel in channels:
-            self._write(f'V{str(channel)} {str(voltage)};I{str(channel)} {str(current)}')
+        self._write(f'V{str(channel)} {str(voltage)};I{str(channel)} {str(current)}')
 
     def engage_output(self, channels, seek_permission=True):
         """
         Engage outputs on specific channels with user permission
         Parameters
         ----------
-        channels : int or tuple
+        channels : tuple or int
             output channel or channels to be engaged
         seek_permission : bool
             True - seek user permission before activating the outputs
@@ -590,15 +662,21 @@ class Tti3ChPsu(SerialDevice):
         int 1 - output engage command sent,
             0 - output engage command was not sent because user permission wasn't granted
         """
+
+        if type(channels) is int:
+            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
+
+        self._channel_arg_check(channels, expected_type=tuple)
+
+        self.disengage_output()
+
         long_msg = []
         chan_support_msg = ''
-        channels = self._arg_check(channels)
-        self.disengage_output()
 
         for channel in channels:
 
             # query output setting
-            sel_voltage = self._query(f'V{str(channel)}?')[3:] # The response is V <n> <nr2> where <nr2> is in Volts
+            sel_voltage = self._query(f'V{str(channel)}?')[3:]  # The response is V <n> <nr2> where <nr2> is in Volts
             sel_current = self._query(f'I{str(channel)}?')[3:]
 
             if sel_voltage == '':
@@ -619,7 +697,7 @@ class Tti3ChPsu(SerialDevice):
         self._write("".join(long_msg))
         return 1
 
-    def disengage_output(self, channels='all'):
+    def disengage_output(self, channels=tuple(range(1, MAX_CHANNELS+1))):
         """
         Disengage outputs on specif channels at once.
         Parameters
@@ -630,10 +708,15 @@ class Tti3ChPsu(SerialDevice):
         -------
             None
         """
-        if channels is 'all':
+
+        if type(channels) is int:
+            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
+
+        self._channel_arg_check(channels, expected_type=tuple)
+
+        if channels == tuple(range(1, self.MAX_CHANNELS+1)):
             self._disengage_all_outputs()
-        else:  # deactivate only the the specific outputs, all at once
-            channels = self._arg_check(channels)
+        else:  # deactivate only the the specific outputs, all in one command
             long_msg = []
             for channel in channels:
                 long_msg.append(f'OP{str(channel)} 0;')
@@ -656,11 +739,13 @@ class Tti2ChPsu(Tti3ChPsu):
     """
     MAX_CHANNELS = 2
 
+
 class Tti1ChPsu(Tti3ChPsu):
     """
     TTI 1 channel PSU basic controller
     """
     MAX_CHANNELS = 1
+
 
 class TtiQL2ChPsu(Tti2ChPsu):
     """
@@ -673,6 +758,7 @@ class TtiQL2ChPsu(Tti2ChPsu):
                 'read_timeout': 1,
                 'write_timeout': 1,
                 }
+
 
 class TtiQL1ChPsu(TtiQL2ChPsu):
     """
@@ -760,6 +846,8 @@ class GlOpticTouch(BaseDevice):
                                   f'these attributes are set to {self.DEFAULTS["meas_request"]}')
         # TODO The measurement message could be modified by this interface without any actual communications here.
 
+    # TODO def finalize() is missing!
+
     @staticmethod
     def _parse_xml_to_dict(xml_string, xml_dump=False):
         root = et.fromstring(xml_string)
@@ -783,6 +871,7 @@ class GlOpticTouch(BaseDevice):
 
         return results_dict
 
+
 if __name__ == '__main__':
 
     pass
@@ -800,66 +889,66 @@ if __name__ == '__main__':
     
     # ROHDE PSU DEMO STARTS HERE
 
-   # psu1 = RohdeHmp4ChPsu('COM12')
-   # psu1.initialize()
-   # print(f'Device class {psu1.__class__.__name__} ({psu1.port})\n ID: {psu1.id}\n')
-   #
-   # psu1.set_output(1,voltage=1, current=0.555)
-   # psu1.set_output(2,voltage=2, current=0.556)
-   # psu1.set_output(3,voltage=3, current=0.557)
-   # psu1.set_output(4,voltage=4, current=0.558)
-   #
-   # psu1.engage_output(1) # you will be prompted if you really wish to continue under current settings
-   # sleep(2)
-   #
-   # psu1.engage_output(2) #repeating request will cause all other channels to reset (shut down).
-   # sleep(2)
-   #
-   # psu1.engage_output((1, 2, 3)) # all channel outputs in the tuple will engage at the same instance
-   # sleep(2)
-   #
-   # for chanel in (1, 2, 3, 4):
-   #     volts, v_unit, current, i_unit = psu1.get_input(chanel)
-   #     print(f' Ch:{chanel} reading:{volts}{v_unit} and {current}{i_unit}\n')
-   #
-   # psu1.disengage_output((1, 2, 3)) # channels should disengage pretty much at the same instance
-   # sleep(2)
-   #
-   # psu1.engage_output((1, 2))
-   # sleep(2)
-   #
-   # psu1.set_output(1, voltage=2, current=1) # NOTE: you can manipulate output settings on an engaged output.
-   # Do so at your own risk!
-   #
-   # psu1.disengage_output() # this definitely, immediately shuts down all channels simultaneously
-   # psu1.finalize()
-   #
-   #  FLUKE DMM DEMO STARTS HERE
-   #
-   # dmm2 = Fluke28xDmm('COM13') #<---- Remember to change the port
-   # dmm2.initialize()
-   # print(f'Device class{dmm2.__class__.__name__} ({dmm2.port})\n ID: {dmm2.id}\n')
-   #
-   # reading, units = dmm2.get_input()
-   #
-   # print(f' CH1_READING:{reading} {units}\n')
-   # dmm2.finalize()
-   #
-   #  Tti3ChPsu DEMO STARTS HERE
-   #
-   # psu2 = Tti3ChPsu('COM10')
-   # psu2.initialize()
-   # sleep(2)
-   # psu2.set_output(1,voltage=1,current=0.1)
-   # psu2.set_output(2,voltage=2,current=0.2)
-   # sleep(2)
-   # psu2.engage_output((1,2))
-   # sleep(2)
-   # print(psu2.get_input(1))
-   # sleep(2)
-   # psu2.disengage_output(2)
-   # sleep(2)
-   # psu2.disengage_output()
-   # sleep(2)
-   # psu2.finalize()
-    
+    # psu1 = RohdeHmp4ChPsu('COM12')
+    # psu1.initialize()
+    # print(f'Device class {psu1.__class__.__name__} ({psu1.port})\n ID: {psu1.id}\n')
+    #
+    # psu1.set_output(1,voltage=1, current=0.555)
+    # psu1.set_output(2,voltage=2, current=0.556)
+    # psu1.set_output(3,voltage=3, current=0.557)
+    # psu1.set_output(4,voltage=4, current=0.558)
+    #
+    # psu1.engage_output(1) # you will be prompted if you really wish to continue under current settings
+    # sleep(2)
+    #
+    # psu1.engage_output(2) #repeating request will cause all other channels to reset (shut down).
+    # sleep(2)
+    #
+    # psu1.engage_output((1, 2, 3)) # all channel outputs in the tuple will engage at the same instance
+    # sleep(2)
+    #
+    # for chanel in (1, 2, 3, 4):
+    #     volts, v_unit, current, i_unit = psu1.get_input(chanel)
+    #     print(f' Ch:{chanel} reading:{volts}{v_unit} and {current}{i_unit}\n')
+    #
+    # psu1.disengage_output((1, 2, 3)) # channels should disengage pretty much at the same instance
+    # sleep(2)
+    #
+    # psu1.engage_output((1, 2))
+    # sleep(2)
+    #
+    # psu1.set_output(1, voltage=2, current=1) # NOTE: you can manipulate output settings on an engaged output.
+    # Do so at your own risk!
+    #
+    # psu1.disengage_output() # this definitely, immediately shuts down all channels simultaneously
+    # psu1.finalize()
+    #
+    #  FLUKE DMM DEMO STARTS HERE
+    #
+    # dmm2 = Fluke28xDmm('COM13') #<---- Remember to change the port
+    # dmm2.initialize()
+    # print(f'Device class{dmm2.__class__.__name__} ({dmm2.port})\n ID: {dmm2.id}\n')
+    #
+    # reading, units = dmm2.get_input()
+    #
+    # print(f' CH1_READING:{reading} {units}\n')
+    # dmm2.finalize()
+    #
+    #  Tti3ChPsu DEMO STARTS HERE
+    #
+    # psu2 = Tti3ChPsu('COM10')
+    # psu2.initialize()
+    # sleep(2)
+    # psu2.set_output(1,voltage=1,current=0.1)
+    # psu2.set_output(2,voltage=2,current=0.2)
+    # sleep(2)
+    # psu2.engage_output((1,2))
+    # sleep(2)
+    # print(psu2.get_input(1))
+    # sleep(2)
+    # psu2.disengage_output(2)
+    # sleep(2)
+    # psu2.disengage_output()
+    # sleep(2)
+    # psu2.finalize()
+
