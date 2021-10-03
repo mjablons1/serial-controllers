@@ -43,7 +43,15 @@ class BaseDevice: # TODO Turn this into base class with ABC?
         pass
 
     def _query(self, message):
-        """ Write a message and read the response in one method. """
+        """ Write a message and read the response in one method.
+        Parameters
+        ----------
+        message : str
+            message to send to the device
+        Returns
+        -------
+            str whatever the output message
+        """
         self._write(message)
         return self._read()
 
@@ -156,21 +164,6 @@ class SerialDevice(BaseDevice):
         """
         message = 'OUT:CH{}:{}'.format(channel, output_value)
         self._query(message)
-
-    def _query(self, message):
-        """
-        Wrapper around writing and reading to make the flow easier.
-        Parameters
-        ----------
-        message : str
-            message to send to the device
-        Returns
-        -------
-            str whatever the output message
-        """
-
-        self._write(message)
-        return self._read()
 
     def _write(self, message):
         """
