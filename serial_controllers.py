@@ -103,10 +103,8 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
 
         """
         self.type_check(channel_s, expected_type)
-
-        if expected_type is int:
-            channel_s = (channel_s,)  # pack into a tuple to pass through the following test as iterable
-        if expected_type is tuple:
+        
+        if self.is_iterable(channel_s):
             for channel in channel_s:
                 self.type_check(channel, int)
                 if not self.channel_exists(channel):
@@ -487,9 +485,9 @@ class RohdeHmp4ChPsu(SerialDevice):
             # activate channel
             self._write('OUTP:SEL 1')
 
-    def disengage_output(self, channels=tuple(range(1, MAX_CHANNELS+1))):
+    def disengage_output(self, channels='all'):
         """
-        Disengage outputs on specif channels at once.
+        Disengage outputs on specific channels at once.
         Parameters
         ----------
         channels : tuple of int
@@ -498,6 +496,9 @@ class RohdeHmp4ChPsu(SerialDevice):
         -------
             None
         """
+        
+        if channels == 'all':
+            channels = tuple(range(1, self.MAX_CHANNELS+1))
 
         if type(channels) is int:
             channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
@@ -652,7 +653,7 @@ class Tti3ChPsu(SerialDevice):
         Engage outputs on specific channels with user permission
         Parameters
         ----------
-        channels : tuple or int
+        channels : tuple of ints or int
             output channel or channels to be engaged
         seek_permission : bool
             True - seek user permission before activating the outputs
@@ -664,7 +665,7 @@ class Tti3ChPsu(SerialDevice):
         """
 
         if type(channels) is int:
-            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
+            channels = (channels,)  # sets an exception for int passed in instead of a tuple
 
         self._channel_arg_check(channels, expected_type=tuple)
 
@@ -697,21 +698,25 @@ class Tti3ChPsu(SerialDevice):
         self._write("".join(long_msg))
         return 1
 
-    def disengage_output(self, channels=tuple(range(1, MAX_CHANNELS+1))):
+    def disengage_output(self, channels='all'):
         """
         Disengage outputs on specif channels at once.
         Parameters
         ----------
-        channels : int or tuple of integers
-            number(s) of output channel(s) to disengage, when not passed all outputs will be disengaged
+        channels : int or tuple of ints
+            number(s) of output channel(s) to disengage, when not passed all 
+            outputs will be disengaged by default.
         Returns
         -------
             None
         """
+        
+        if channels == 'all':
+            channels = tuple(range(1, self.MAX_CHANNELS+1))
 
         if type(channels) is int:
-            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
-
+            channels = (channels,)  # make an exception for int as input
+            
         self._channel_arg_check(channels, expected_type=tuple)
 
         if channels == tuple(range(1, self.MAX_CHANNELS+1)):
@@ -800,7 +805,7 @@ class GlOpticTouch(BaseDevice):
         listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         listen_socket.bind((self.DEFAULTS['HOST'], self.DEFAULTS['PORT']))
         listen_socket.listen()
-        print('Host {self.HOST} waiting for GL TOUCH Device at PORT {self.PORT}')
+        print(f'Host {self.DEFAULTS["HOST"]} waiting for GL TOUCH Device at PORT {self.DEFAULTS["PORT"]}')
         print('In order for the application to proceed please ensure that the TOUCH device is powered up '
               'and physically connected to the local host.')
         tcp_conn_socket, client_address = listen_socket.accept()
@@ -846,7 +851,8 @@ class GlOpticTouch(BaseDevice):
                                   f'these attributes are set to {self.DEFAULTS["meas_request"]}')
         # TODO The measurement message could be modified by this interface without any actual communications here.
 
-    # TODO def finalize() is missing!
+    def finalize(self):
+        self.rsc.close()
 
     @staticmethod
     def _parse_xml_to_dict(xml_string, xml_dump=False):
