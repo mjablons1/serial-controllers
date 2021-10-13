@@ -777,13 +777,13 @@ class GlOpticTouch(BaseDevice):
     DEFAULTS = {'write_prefix': '<',
                 'write_termination': ' />',  # TODO: check if space is really needed
                 'encoding': 'ascii',
-                "HOST": "127.0.0.1",
+                "HOST": '',
                 "PORT": 12001,
                 "read_buffer": 32768,
                 "meas_request": 'request name="measure" beep="on" mode="direct" integration_time="5000" '
                                 'repeat_count="1" auto="on"'}  # with auto="on" integration_time is ignored.
 
-    # HOST: Standard loopback interface address
+    # HOST: empty string '' means server will listen to 'connect' requests from any external computer.
     # PORT: Same port that GL SPECTROSOFT establishes (use netstat in case its different in case of your equipment)
 
     def __init__(self):
