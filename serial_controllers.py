@@ -863,19 +863,33 @@ class GlOpticTouch(BaseDevice):
             file_name = xml_dump.strip('.xml') + date_str + '.xml'
             et.ElementTree(root).write(file_name)
 
-        results_dict = dict()
-        for parameter in root.find('results'):
-            results_dict[parameter.attrib.get('name')] = parameter.text
+        ans_dict = dict(results=dict(), status=dict(), data=dict(spectrum_x=[], spectrum_y=[]))
 
-        # TODO this can be dict of dicts each containing the contents from each of the tags. E.g. meas_dict['status'][
-        #  x], meas_dict['data'][x], meas_dict['results'][x].
+        # flatten the data structure to name attributes only (caption atrributes are not very readable and contain
+        # unusual complex characters)
+        for parameter in root.find('status'):
+            ans_dict['status'][parameter.attrib.get('name')] = parameter.text
+
+        # collect tagged data
+        data = root.find('data')
+        for parameter in data:
+            # Avoid creating 'row' key entry as that would contain only the first found row (and there are many)...
+            if parameter.tag != 'row':
+                ans_dict['data'][parameter.tag] = parameter.attrib
+
+        for row in data.findall('row'):  # ...instead append all row elements into lists.
+            ans_dict['data']['spectrum_x'].append(row.attrib.get('wavelength'))
+            ans_dict['data']['spectrum_y'].append(row.attrib.get('value'))
+
+        for parameter in root.find('results'):
+            ans_dict['results'][parameter.attrib.get('name')] = parameter.text
 
         # TODO some of the items under 'results' have non obvious name attribute. Perhaps their content can be copied
         #  to additional entries with more friendly names (e.g. results_dict["Y"] = results_dict["luminous_flux"]),
         #  also one level deeper some static definitions of units can be added i.e.: results_dict["luminous_flux"][
         #  'unit'] since these are terribly missing in the xml returned by the device.
 
-        return results_dict
+        return ans_dict
 
 
 if __name__ == '__main__':
