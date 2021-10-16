@@ -69,8 +69,16 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
         pass
 
     def finalize(self):
-        """ Tear down whatever hardware communication established in the initialize method."""
-        pass
+        """
+        Closes the resource
+        Returns
+        -------
+            None
+        """
+        if self.rsc is not None:
+            self.rsc.close()
+            self.rsc = None
+            print(f'({self.port}) Released resource:\n {self.id}')
 
     def channel_exists(self, channel):
         """
@@ -179,6 +187,18 @@ class SerialDevice(BaseDevice):
         sleep(0.5)
         self.beep()
         self.id = self.idn()
+        if self.id == '':
+            # This is a workaround because pySerial does not raise read timeout exception for some reason when you
+            # query the wrong resource using read_until(). See https://github.com/pyserial/pyserial/issues/108. This
+            # workaround isn't perfect because, theoretically, if the resource replies with some error message it
+            # will probably be taken for a valid ID.
+            raise serial.SerialException(f'The resource did not identify itself correctly (Received id: {self.id}). '
+                                         f'Its most likely that you have specified an existing, but incorrect COM '
+                                         f'port for this device. Alternatively you are sending the wrong IDN request '
+                                         f'message for this device type. In the later case please override the '
+                                         f'inherited idn() method with one that uses the correct identification '
+                                         f'request message.')
+
         print(f'({self.port}) Initialized resource:\n {self.id}')
 
     def idn(self):
@@ -277,18 +297,6 @@ class SerialDevice(BaseDevice):
         """
         self._write(message)
         return self._read()
-
-    def finalize(self):
-        """
-        Closes the resource
-        Returns
-        -------
-            None
-        """
-        if self.rsc is not None:
-            self.rsc.close()
-            self.rsc = None
-            print(f'({self.port}) Released resource:\n {self.id}')
 
 
 class AgilentU12xxxDmm(SerialDevice):
@@ -421,27 +429,29 @@ class RohdeHmp4ChPsu(SerialDevice):
         """
 
         if type(channels) is int:
-            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
+            channels = (channels,)  # make exception for passing int instead of a tuple
 
         self._channel_arg_check(channels, expected_type=tuple)
 
         self.disengage_output()
         self._activate_channels(channels)
-        for channel in channels:
-            # select channel
-            self._write(f'INST:NSEL {str(channel)}')
-            # query input level settings to inform user prior to seeking permission.
-            sel_voltage = self._query('VOLT?')
-            sel_current = self._query('CURR?')
-            print(f'Ch:{channel} is activated at:\n'
-                  f' {sel_voltage} Volt\n'
-                  f' {sel_current} Amp')
 
         if seek_permission:
-            if input(f'Are you sure you want to engage outputs on active channels?\n Enter [y] to continue.\n') != 'y':
-                self.disengage_output()
+            print(f'\nDevice {self.id}:\n requesting persmission to engage outputs->')
+            for channel in channels:
+                # select channel
+                self._write(f'INST:NSEL {str(channel)}')
+                # query input level settings to inform user prior to seeking permission.
+                sel_voltage = self._query('VOLT?')
+                sel_current = self._query('CURR?')
+                print(f'  Ch:{channel} @: {sel_voltage} Volt / {sel_current} Amp')       
+            
+            usr_ans = input(f' Are you sure you want to proceed?[y/n] > ')
+            if usr_ans.lower() != 'y':
+                print('   Skipping outputs engage.\n')
+                self.disengage_output()  # TODO perhaps this is too conservative/unnecesssary, conisder removing.
                 return 0
-
+            
         self._write('OUTP:GEN 1')
         return 1
         
@@ -576,6 +586,7 @@ class Fluke28xDmm(SerialDevice):
         self._channel_arg_check(channel, expected_type=int)
         self._query('QM')
         ans = self._read()
+        print(f'ans: {ans}')
         ans_list = [item.strip() for item in ans.split(',')]
         reading = ans_list[0]
         unit = ans_list[1]
@@ -671,36 +682,37 @@ class Tti3ChPsu(SerialDevice):
 
         self.disengage_output()
 
-        long_msg = []
-        chan_support_msg = ''
-
-        for channel in channels:
-
-            # query output setting
-            sel_voltage = self._query(f'V{str(channel)}?')[3:]  # The response is V <n> <nr2> where <nr2> is in Volts
-            sel_current = self._query(f'I{str(channel)}?')[3:]
-
-            if sel_voltage == '':
-                chan_support_msg = ' Device does not seem to support this channel'
-
-            print(f'Ch:{channel} is set to:\n'
-                  f' {sel_voltage} Volt\n'
-                  f' {sel_current} Amp\n'
-                  f' {chan_support_msg}')
-
-            long_msg.append(f'OP{str(channel)} 1;')
-
         if seek_permission:
-            if input(f'Are you sure you want to engage outputs on these channels?\n Enter [y] to continue.\n') != 'y':
-                self.disengage_output()
+            # TODO: below code is near identical for both PSU classes. Perhaps it would be worthwhile to unify by
+            #  calling get_input instead of _query and def a dedicated SerialDevice method (i.e.
+            #  _get_permission_to_engage()). Downside is that each device will return a little different string
+            #  formatting for voltage and current.
+            print(f'\nDevice {self.id}:\n requesting persmission to engage outputs->')
+            for channel in channels:
+    
+                # query input level settings to inform user prior to seeking permission.
+                # The response is V <n> <nr2> where <nr2> is in Volts
+                sel_voltage = self._query(f'V{str(channel)}?')[3:]
+                sel_current = self._query(f'I{str(channel)}?')[3:]
+                print(f'  Ch:{channel} @: {sel_voltage} Volt / {sel_current} Amp')
+
+            usr_ans = input(f' Are you sure you want to proceed?[y/n] > ')
+            if usr_ans.lower() != 'y':
+                print('   Skipping outputs engage.\n')
+                self.disengage_output()  # TODO perhaps this is too conservative/unnecessary, consider removing.
                 return 0
+        
+        # construct one message with request to engage each of the channels:
+        long_msg = []
+        for channel in channels:
+            long_msg.append(f'OP{str(channel)} 1;')
 
         self._write("".join(long_msg))
         return 1
 
     def disengage_output(self, channels='all'):
         """
-        Disengage outputs on specif channels at once.
+        Disengage outputs on specific channels at once.
         Parameters
         ----------
         channels : int or tuple of ints
@@ -775,15 +787,17 @@ class TtiQL1ChPsu(TtiQL2ChPsu):
 class GlOpticTouch(BaseDevice):
 
     DEFAULTS = {'write_prefix': '<',
-                'write_termination': ' />',  # TODO: check if space is really needed
+                'write_termination': ' />',
                 'encoding': 'ascii',
-                "HOST": '',
+                "HOST": '127.0.0.1',
                 "PORT": 12001,
                 "read_buffer": 32768,
+                "timeout": 20,  # this value has to be kept long since extremely dimm light sources can cause very
+                # lengthy auto integration time and in these cases you have to wait long for the result (
+                # experimentally up to about 15s)
                 "meas_request": 'request name="measure" beep="on" mode="direct" integration_time="5000" '
                                 'repeat_count="1" auto="on"'}  # with auto="on" integration_time is ignored.
 
-    # HOST: empty string '' means server will listen to 'connect' requests from any external computer.
     # PORT: Same port that GL SPECTROSOFT establishes (use netstat in case its different in case of your equipment)
 
     def __init__(self):
@@ -801,20 +815,24 @@ class GlOpticTouch(BaseDevice):
 
     def initialize(self):
 
-        # Simple TCP server setup with blocking handshake:
-        listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        listen_socket.bind((self.DEFAULTS['HOST'], self.DEFAULTS['PORT']))
-        listen_socket.listen()
-        print(f'Host {self.DEFAULTS["HOST"]} waiting for GL TOUCH Device at PORT {self.DEFAULTS["PORT"]}')
-        print('In order for the application to proceed please ensure that the TOUCH device is powered up '
-              'and physically connected to the local host.')
-        tcp_conn_socket, client_address = listen_socket.accept()
-        print(f'TCP Server Host {self.DEFAULTS["HOST"]} established connection with measurement device at:\n '
-              f'{client_address}.')
+        # set up TCP client to talk to the Spectrosoft local host at port 12001
+        spectrosoft_client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        spectrosoft_client_socket.settimeout(self.DEFAULTS['timeout'])
+        
+        try:
+            spectrosoft_client_socket.connect((self.DEFAULTS['HOST'], self.DEFAULTS['PORT']))
+        except ConnectionRefusedError:
+            raise ConnectionRefusedError('Could not connect to SpectroSoft. Please verify that SpectroSoft software '
+                                         'is runnning in the background.\n(NOTE: you need a hardware USB key to run '
+                                         'SpectroSoft)')
 
-        self.id = client_address[0]
-        self.port = client_address[1]
-        self.rsc = tcp_conn_socket
+        host, port = spectrosoft_client_socket.getpeername()
+        
+        print(f'Connected to SpectroSoft host ({host}) at port {port}.')
+
+        self.id = host
+        self.port = port
+        self.rsc = spectrosoft_client_socket
 
     def _write(self, message):
         message = self.DEFAULTS['write_prefix'] + message + self.DEFAULTS['write_termination']
@@ -823,7 +841,12 @@ class GlOpticTouch(BaseDevice):
 
     def _read(self):
         # data returned by recv is readily an xml format string
-        gl_xml_string = self.rsc.recv(self.DEFAULTS['read_buffer'])
+        try:
+            gl_xml_string = self.rsc.recv(self.DEFAULTS['read_buffer'])
+        except socket.timeout:
+            raise socket.timeout('Could not obtain measurement data from spectrometer.\n Please check the USB '
+                                 'connection between PC and the Spectrometer.')
+        
         return self._parse_xml_to_dict(gl_xml_string, xml_dump=self.xml_dump_file_name)
 
     def get_input(self, *args):
@@ -850,9 +873,6 @@ class GlOpticTouch(BaseDevice):
                                   f'modify the DEFAULTS[meas_request] string attribute values. Currently '
                                   f'these attributes are set to {self.DEFAULTS["meas_request"]}')
         # TODO The measurement message could be modified by this interface without any actual communications here.
-
-    def finalize(self):
-        self.rsc.close()
 
     @staticmethod
     def _parse_xml_to_dict(xml_string, xml_dump=False):
@@ -893,82 +913,4 @@ class GlOpticTouch(BaseDevice):
 
 
 if __name__ == '__main__':
-
     pass
-    # AGILENT DMM TESTING STARTS HERE
-    
-    # dmm1 = AgilentU12xxxDmm('COM9') #<---- Remember to change the port
-    # dmm1.initialize()
-    # print(f'Device class{dmm1.__class__.__name__} ({dmm1.port})\n ID: {dmm1.id}\n')
-    #
-    # primary_reading, primary_units = dmm1.get_input(1)
-    # secondary_reading, secondary_units = dmm1.get_input(2)
-    #
-    # print(f' CH1_READING:{primary_reading} {primary_units}\n CH2_READING:{secondary_reading} {secondary_units}\n')
-    # dmm1.finalize()
-    
-    # ROHDE PSU DEMO STARTS HERE
-
-    # psu1 = RohdeHmp4ChPsu('COM12')
-    # psu1.initialize()
-    # print(f'Device class {psu1.__class__.__name__} ({psu1.port})\n ID: {psu1.id}\n')
-    #
-    # psu1.set_output(1,voltage=1, current=0.555)
-    # psu1.set_output(2,voltage=2, current=0.556)
-    # psu1.set_output(3,voltage=3, current=0.557)
-    # psu1.set_output(4,voltage=4, current=0.558)
-    #
-    # psu1.engage_output(1) # you will be prompted if you really wish to continue under current settings
-    # sleep(2)
-    #
-    # psu1.engage_output(2) #repeating request will cause all other channels to reset (shut down).
-    # sleep(2)
-    #
-    # psu1.engage_output((1, 2, 3)) # all channel outputs in the tuple will engage at the same instance
-    # sleep(2)
-    #
-    # for chanel in (1, 2, 3, 4):
-    #     volts, v_unit, current, i_unit = psu1.get_input(chanel)
-    #     print(f' Ch:{chanel} reading:{volts}{v_unit} and {current}{i_unit}\n')
-    #
-    # psu1.disengage_output((1, 2, 3)) # channels should disengage pretty much at the same instance
-    # sleep(2)
-    #
-    # psu1.engage_output((1, 2))
-    # sleep(2)
-    #
-    # psu1.set_output(1, voltage=2, current=1) # NOTE: you can manipulate output settings on an engaged output.
-    # Do so at your own risk!
-    #
-    # psu1.disengage_output() # this definitely, immediately shuts down all channels simultaneously
-    # psu1.finalize()
-    #
-    #  FLUKE DMM DEMO STARTS HERE
-    #
-    # dmm2 = Fluke28xDmm('COM13') #<---- Remember to change the port
-    # dmm2.initialize()
-    # print(f'Device class{dmm2.__class__.__name__} ({dmm2.port})\n ID: {dmm2.id}\n')
-    #
-    # reading, units = dmm2.get_input()
-    #
-    # print(f' CH1_READING:{reading} {units}\n')
-    # dmm2.finalize()
-    #
-    #  Tti3ChPsu DEMO STARTS HERE
-    #
-    # psu2 = Tti3ChPsu('COM10')
-    # psu2.initialize()
-    # sleep(2)
-    # psu2.set_output(1,voltage=1,current=0.1)
-    # psu2.set_output(2,voltage=2,current=0.2)
-    # sleep(2)
-    # psu2.engage_output((1,2))
-    # sleep(2)
-    # print(psu2.get_input(1))
-    # sleep(2)
-    # psu2.disengage_output(2)
-    # sleep(2)
-    # psu2.disengage_output()
-    # sleep(2)
-    # psu2.finalize()
-
