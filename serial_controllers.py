@@ -6,8 +6,9 @@ from datetime import datetime
 # Ensure module is usable even if user environment does not contain socket package.
 try:
     import socket
-except ImportError as exc1:
+except ImportError as e:
     socket = None
+    exc1 = e
 
 
 class BaseDevice:  # TODO Turn this into base class with ABC?
