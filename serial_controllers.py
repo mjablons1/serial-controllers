@@ -26,7 +26,7 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
         self.id = 'UNKNOWN DEVICE'  # identification of the meas. instrument (e.g. IDN string or network IP address.).
 
     def __str__(self):
-        return f'Device model: {self.id} at Port {self.port} \n Communication settings: {self.DEFAULTS}'
+        return f'\nDevice model: {self.id} at Port {self.port} \n Communication settings: {self.DEFAULTS}'
 
     def initialize(self):
         """ Establish communication / open port using instance or class attributes."""
