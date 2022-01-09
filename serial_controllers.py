@@ -1,8 +1,13 @@
-import serial
 from time import sleep
 import xml.etree.ElementTree as et
 from datetime import datetime
 import socket
+
+try:
+    import serial
+except ImportError as e:
+    serial = None
+    exc1 = e
 
 
 class BaseDevice:  # TODO Turn this into base class with ABC?
@@ -168,6 +173,12 @@ class SerialDevice(BaseDevice):
     MAX_CHANNELS = 2  # TODO not sure if there is any good reason to override here
 
     def __init__(self, port):
+
+        # Remind user to install serial package to use any serial device:
+        if serial is None:
+            raise ImportError(f'{self.__class__.__name__} requires module "serial", which failed on import with '
+                              f'error:\n{exc1}')
+
         super().__init__()
         self.port = port
 
