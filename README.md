@@ -80,6 +80,12 @@ NOTE: Some versions of below devices may require adjustments due to inconsistenc
 | TTI | QL564P | TtiQL1ChPsu | | operates at 19200 baud rate by default |
 | Rohde & Schwarz | HMP2030 | RohdeHmp3ChPsu | | |
 | Rohde & Schwarz | HMP4040 | RohdeHmp4ChPsu | * | |
+
+### Spectrometers:
+
+| Brand         | Model           | serial-controllers supporting class | Verified with | Comments |
+| ------------- |:---------------:| -----------------------------------:| ------------: | -------: |
+| GL Optic | Touch 1.0 | GlOpticTouch | * | Requires GL Spectrosoft PRO which runs a TCP server that relays the measurement data from the spectrometer. See HW manuals/gl_parsing_result.txt for example dict structure returned by get_input().|
     
 ## Acknowledgements
 1) The base class relies on a modified SimpleDaq class from Python For the Lab materials. [link to source](https://github.com/aquilesC/SimpleDaq/blob/master/PythonForTheLab/Controller/simple_daq.py)
