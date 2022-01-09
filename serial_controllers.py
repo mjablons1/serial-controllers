@@ -25,6 +25,9 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
         self.rsc = None  # resource object for pushing communications (e.g. serial or TCP socket).
         self.id = 'UNKNOWN DEVICE'  # identification of the meas. instrument (e.g. IDN string or network IP address.).
 
+    def __str__(self):
+        return f'Device model: {self.id} at Port {self.port} \n Communication settings: {self.DEFAULTS}'
+
     def initialize(self):
         """ Establish communication / open port using instance or class attributes."""
         pass
