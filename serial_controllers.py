@@ -2,13 +2,7 @@ import serial
 from time import sleep
 import xml.etree.ElementTree as et
 from datetime import datetime
-
-# Ensure module is usable even if user environment does not contain socket package.
-try:
-    import socket
-except ImportError as e:
-    socket = None
-    exc1 = e
+import socket
 
 
 class BaseDevice:  # TODO Turn this into base class with ABC?
@@ -807,10 +801,6 @@ class GlOpticTouch(BaseDevice):
     def __init__(self):
 
         super().__init__()
-        # Remind user to install socket to use this model:
-        if socket is None:
-            raise ImportError(f'{self.__class__.__name__} requires module "socket", which failed on import with '
-                              f'error:\n{exc1}')
 
         self.xml_dump_file_name = None  # if overwritten with str file dumping with that str in file name as prefix
         # will be dumped for every measurement. If user specifies any other type it will be ignored.
