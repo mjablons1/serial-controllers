@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from time import sleep
 import xml.etree.ElementTree as et
 from datetime import datetime
@@ -10,7 +11,7 @@ except ImportError as e:
     exc1 = e
 
 
-class BaseDevice:  # TODO Turn this into base class with ABC?
+class BaseDevice(ABC):
     """Prototype class for a device"""
     # TODO : create some example keys for DEFAULTS dict for illustration
     DEFAULTS = dict()  # normally used to store communication settings matching to a specific device defaults
@@ -27,18 +28,22 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
     def __str__(self):
         return f'\nDevice model: {self.id} at Port {self.port} \n Communication settings: {self.DEFAULTS}'
 
+    @abstractmethod
     def initialize(self):
         """ Establish communication / open port using instance or class attributes."""
         pass
 
+    @abstractmethod
     def idn(self):
         """ Request the device to introduce itself to you. """
         pass
 
+    @abstractmethod
     def beep(self):
         """ Request the device to make itself stand out from the physical test setup by making a sound, if possible. """
         pass
 
+    @abstractmethod
     def get_input(self, channel):
         """ Get measurement input from a specific measurement channel.
          Method should construct a device-specific message and pass it to the device with _query."""
@@ -50,6 +55,7 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
         expected to acknowledge). """
         pass
 
+    @abstractmethod
     def _query(self, message):
         """ Write a message and read the response in one method.
         Parameters
@@ -63,10 +69,12 @@ class BaseDevice:  # TODO Turn this into base class with ABC?
         self._write(message)
         return self._read()
 
+    @abstractmethod
     def _write(self, message):
         """ Lowest level write to whatever communication API represented by self.rsc. """
         pass
 
+    @abstractmethod
     def _read(self):
         """ Lowest level read from whatever communication API represented by self.rsc. """
         pass
