@@ -21,12 +21,12 @@ class BaseDevice(ABC):
     def __init__(self):
         """ Not much to do here beside eventual attribute assignment. Use initialize to establish the actual
         connection to the device so that no new instance is immediately creating that workload. """
-        self.port = None  # identification of physical / virtual port at which the hardware is found / assigned.
-        self.rsc = None  # resource object for pushing communications (e.g. serial or TCP socket).
-        self.id = 'UNKNOWN DEVICE'  # identification of the meas. instrument (e.g. IDN string or network IP address.).
+        self._port = None  # identification of physical / virtual port at which the hardware is found / assigned.
+        self._rsc = None  # resource object for pushing communications (e.g. serial or TCP socket).
+        self._id = 'UNKNOWN DEVICE'  # identification of the meas. instrument (e.g. IDN string or network IP address.).
 
     def __str__(self):
-        return f'\nDevice model: {self.id} at Port {self.port} \n Communication settings: {self.DEFAULTS}'
+        return f'\nDevice model: {self._id} at Port {self._port} \n Communication settings: {self.DEFAULTS}'
 
     @abstractmethod
     def initialize(self):
@@ -86,10 +86,10 @@ class BaseDevice(ABC):
         -------
             None
         """
-        if self.rsc is not None:
-            self.rsc.close()
-            self.rsc = None
-            print(f'({self.port}) Released resource:\n {self.id}')
+        if self._rsc is not None:
+            self._rsc.close()
+            self._rsc = None
+            print(f'({self._port}) Released resource:\n {self._id}')
 
     def channel_exists(self, channel):
         """
