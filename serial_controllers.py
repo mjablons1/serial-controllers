@@ -71,12 +71,12 @@ class BaseDevice(ABC):
 
     @abstractmethod
     def _write(self, message):
-        """ Lowest level write to whatever communication API represented by self.rsc. """
+        """ Lowest level write to whatever communication API represented by self._rsc. """
         pass
 
     @abstractmethod
     def _read(self):
-        """ Lowest level read from whatever communication API represented by self.rsc. """
+        """ Lowest level read from whatever communication API represented by self._rsc. """
         pass
 
     def finalize(self):
@@ -164,7 +164,7 @@ class SerialDevice(BaseDevice):
         The port where the device is connected. Something like COM3 on Windows, or /dev/ttyACM0 on Linux
     Attributes
     ----------
-    rsc : serial
+    _rsc : serial
         The serial communication with the device
     port : str
         The port where the device is connected, such as COM3 or /dev/ttyACM0
@@ -188,7 +188,7 @@ class SerialDevice(BaseDevice):
                               f'error:\n{exc1}')
 
         super().__init__()
-        self.port = port
+        self._port = port
 
     def initialize(self):
         """
@@ -197,26 +197,26 @@ class SerialDevice(BaseDevice):
         -------
             None
         """
-        self.rsc = serial.Serial(port=self.port,
-                                 baudrate=self.DEFAULTS['baudrate'],
-                                 timeout=self.DEFAULTS['read_timeout'],
-                                 write_timeout=self.DEFAULTS['write_timeout'])
+        self._rsc = serial.Serial(port=self._port,
+                                  baudrate=self.DEFAULTS['baudrate'],
+                                  timeout=self.DEFAULTS['read_timeout'],
+                                  write_timeout=self.DEFAULTS['write_timeout'])
         sleep(0.5)
         self.beep()
-        self.id = self.idn()
-        if self.id == '':
+        self._id = self.idn()
+        if self._id == '':
             # This is a workaround because pySerial does not raise read timeout exception for some reason when you
             # query the wrong resource using read_until(). See https://github.com/pyserial/pyserial/issues/108. This
             # workaround isn't perfect because, theoretically, if the resource replies with some error message it
             # will probably be taken for a valid ID.
-            raise serial.SerialException(f'The resource did not identify itself correctly (Received id: {self.id}). '
+            raise serial.SerialException(f'The resource did not identify itself correctly (Received id: {self._id}). '
                                          f'Its most likely that you have specified an existing, but incorrect COM '
                                          f'port for this device. Alternatively you are sending the wrong IDN request '
                                          f'message for this device type. In the later case please override the '
                                          f'inherited idn() method with one that uses the correct identification '
                                          f'request message.')
 
-        print(f'({self.port}) Initialized resource:\n {self.id}')
+        print(f'({self._port}) Initialized resource:\n {self._id}')
 
     def idn(self):
         """
@@ -283,7 +283,7 @@ class SerialDevice(BaseDevice):
         """
         message = message + self.DEFAULTS['write_termination']
         message = message.encode(self.DEFAULTS['encoding'])
-        self.rsc.write(message)
+        self._rsc.write(message)
 
     def _read(self):
         """
@@ -292,10 +292,10 @@ class SerialDevice(BaseDevice):
         -------
             str message returned by device
         """
-        # ans = self.rsc.readline() # readline() assumes \n as escape character causing read timeout on devices that
+        # ans = self._rsc.readline() # readline() assumes \n as escape character causing read timeout on devices that
         # use any other read termination character.
         escape_char = bytes(self.DEFAULTS['read_termination'], self.DEFAULTS['encoding'])
-        ans = self.rsc.read_until(escape_char)  # ... this is why read_until is used
+        ans = self._rsc.read_until(escape_char)  # ... this is why read_until is used
         # print(f'##### Raw answer is: {ans}') #debug only
         ans = ans.decode(self.DEFAULTS['encoding']).strip()
         return ans
@@ -454,7 +454,7 @@ class RohdeHmp4ChPsu(SerialDevice):
         self._activate_channels(channels)
 
         if seek_permission:
-            print(f'\nDevice {self.id}:\n requesting persmission to engage outputs->')
+            print(f'\nDevice {self._id}:\n requesting persmission to engage outputs->')
             for channel in channels:
                 # select channel
                 self._write(f'INST:NSEL {str(channel)}')
@@ -704,7 +704,7 @@ class Tti3ChPsu(SerialDevice):
             #  calling get_input instead of _query and def a dedicated SerialDevice method (i.e.
             #  _get_permission_to_engage()). Downside is that each device will return a little different string
             #  formatting for voltage and current.
-            print(f'\nDevice {self.id}:\n requesting persmission to engage outputs->')
+            print(f'\nDevice {self._id}:\n requesting persmission to engage outputs->')
             for channel in channels:
     
                 # query input level settings to inform user prior to seeking permission.
@@ -843,19 +843,19 @@ class GlOpticTouch(BaseDevice):
         
         print(f'Connected to SpectroSoft host ({host}) at port {port}.')
 
-        self.id = host
-        self.port = port
-        self.rsc = spectrosoft_client_socket
+        self._id = host
+        self._port = port
+        self._rsc = spectrosoft_client_socket
 
     def _write(self, message):
         message = self.DEFAULTS['write_prefix'] + message + self.DEFAULTS['write_termination']
         message = message.encode(self.DEFAULTS['encoding'])
-        self.rsc.sendall(message)
+        self._rsc.sendall(message)
 
     def _read(self):
         # data returned by recv is readily an xml format string
         try:
-            gl_xml_string = self.rsc.recv(self.DEFAULTS['read_buffer'])
+            gl_xml_string = self._rsc.recv(self.DEFAULTS['read_buffer'])
         except socket.timeout:
             raise socket.timeout('Could not obtain measurement data from spectrometer.\n Please check the USB '
                                  'connection between PC and the Spectrometer.')
