@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 from time import sleep
 import xml.etree.ElementTree as et
 from datetime import datetime
+
 import socket
+from socket import timeout as socket_timeout_error
 
 try:
     import serial
@@ -29,8 +31,8 @@ class BaseDevice(ABC):
         return f'\nDevice model: {self._id} at Port {self._port} \n Communication settings: {self.DEFAULTS}'
 
     @abstractmethod
-    def initialize(self):
-        """ Establish communication / open port using instance or class attributes."""
+    def initialize(self, interface=None):
+        """ Establish communication / open port using instance or class attributes. """
         pass
 
     @abstractmethod
@@ -40,23 +42,25 @@ class BaseDevice(ABC):
 
     @abstractmethod
     def beep(self):
-        """ Request the device to make itself stand out from the physical test setup by making a sound, if possible. """
+        """ Request the device to make itself stand out from the physical test setup by making a sound, if possible.
+        It's so cool when it does that. """
         pass
 
     @abstractmethod
-    def get_input(self, channel):
-        """ Get measurement input from a specific measurement channel.
-         Method should construct a device-specific message and pass it to the device with _query."""
+    def get_input(self, channel: int) -> tuple[str, ...]:
+        """ Get measurement input from a specific measurement channel. The response tuple should divide between
+        measurement value string and unit information string. Method should construct a device-specific message and
+        pass it to the device with _query. """
         pass
 
-    def set_output(self, channel, output_parameters):
+    @abstractmethod
+    def set_output(self, channel: int, output_parameters):
         """ Set output parameters at a specific measurement channel. Method should construct a device-specific
         message and pass it to the device with _write (if device does not acknowledge) or _query (if device is
         expected to acknowledge). """
         pass
 
-    @abstractmethod
-    def _query(self, message):
+    def _query(self, message: str) -> str:
         """ Write a message and read the response in one method.
         Parameters
         ----------
@@ -70,12 +74,12 @@ class BaseDevice(ABC):
         return self._read()
 
     @abstractmethod
-    def _write(self, message):
+    def _write(self, message: str):
         """ Lowest level write to whatever communication API represented by self._rsc. """
         pass
 
     @abstractmethod
-    def _read(self):
+    def _read(self) -> str:
         """ Lowest level read from whatever communication API represented by self._rsc. """
         pass
 
@@ -91,7 +95,7 @@ class BaseDevice(ABC):
             self._rsc = None
             print(f'({self._port}) Released resource:\n {self._id}')
 
-    def channel_exists(self, channel):
+    def channel_exists(self, channel: int) -> bool:
         """
         True if channel exits on this class
         Parameters
@@ -107,43 +111,24 @@ class BaseDevice(ABC):
         else:
             return False
 
-    def _channel_arg_check(self, channel_s, expected_type=int):
+    def _channel_nr_check(self, channels: int | tuple[int, ...]):
         """
-        Checks if channels is of the expected_type (either int or tuple of ints) and checks that none of the ints
-        exceed the number of channels for this device.
+        Checks that channel does not exceed the number of channels for this device.
         Parameters
         ----------
-        channel_s :  int or tuple of ints - number(s) of measurement / output channels
-        expected_type : type int or tuple
+        channels:  number(s) of measurement / output channels
 
         Returns
         -------
         None
 
         """
-        self.type_check(channel_s, expected_type)
-        
-        if self.is_iterable(channel_s):
-            for channel in channel_s:
-                self.type_check(channel, int)
-                if not self.channel_exists(channel):
-                    raise ValueError(f'This device does not support channel {channel}')
 
-    @staticmethod
-    def type_check(an_object, expected_type):
-        """
-        Raises TypeError if an_object is of type other than expected_type.
-        Parameters
-        ----------
-            an_object, : any
-            expected_type : type any
+        if not self.is_iterable(channels):
+            channels = (channels,)
 
-        Returns
-        -------
-            None
-        """
-        if not isinstance(an_object, expected_type):
-            raise TypeError(f'Expected type {expected_type} but received {an_object} {type(an_object)}.')
+        for channel in channels:
+            assert self.channel_exists(channel), f'This device does not support channel {channel}'
 
     @staticmethod
     def is_iterable(an_object):
@@ -161,13 +146,15 @@ class SerialDevice(BaseDevice):
     Parameters
     ----------
     port : str
-        The port where the device is connected. Something like COM3 on Windows, or /dev/ttyACM0 on Linux
+        The port where the device is expected to be connected. Something like COM3 on Windows, or /dev/ttyACM0 on Linux
     Attributes
     ----------
     _rsc : serial
-        The serial communication with the device
-    port : str
-        The port where the device is connected, such as COM3 or /dev/ttyACM0
+        The serial communication interface
+    _port : str
+        The port where the device is expected to be connected, such as COM3 or /dev/ttyACM0
+    _id : str
+        Identification string returned by the hardware
     """
 
     DEFAULTS = {'write_termination': '\n',
@@ -180,7 +167,7 @@ class SerialDevice(BaseDevice):
 
     MAX_CHANNELS = 2  # TODO not sure if there is any good reason to override here
 
-    def __init__(self, port):
+    def __init__(self, port: str):
 
         # Remind user to install serial package to use any serial device:
         if serial is None:
@@ -190,22 +177,20 @@ class SerialDevice(BaseDevice):
         super().__init__()
         self._port = port
 
-    def initialize(self):
+    def initialize(self, interface=serial):
         """
         Opens the serial port with the DEFAULTS.
-        Returns
-        -------
-            None
+        The interface argument is meant to simplify unit testing with Mock so that no patching has to be done.
         """
-        self._rsc = serial.Serial(port=self._port,
-                                  baudrate=self.DEFAULTS['baudrate'],
-                                  timeout=self.DEFAULTS['read_timeout'],
-                                  write_timeout=self.DEFAULTS['write_timeout'])
+        self._rsc = interface.Serial(port=self._port,
+                                     baudrate=self.DEFAULTS['baudrate'],
+                                     timeout=self.DEFAULTS['read_timeout'],
+                                     write_timeout=self.DEFAULTS['write_timeout'])
         sleep(0.5)
-        self.beep()
         self._id = self.idn()
+
         if self._id == '':
-            # This is a workaround because pySerial does not raise read timeout exception for some reason when you
+            # pySerial returns empty string instead of raising read timeout exception for some reason when you
             # query the wrong resource using read_until(). See https://github.com/pyserial/pyserial/issues/108. This
             # workaround isn't perfect because, theoretically, if the resource replies with some error message it
             # will probably be taken for a valid ID.
@@ -217,6 +202,7 @@ class SerialDevice(BaseDevice):
                                          f'request message.')
 
         print(f'({self._port}) Initialized resource:\n {self._id}')
+        self.beep()
 
     def idn(self):
         """
@@ -234,48 +220,50 @@ class SerialDevice(BaseDevice):
         -------
             None
         """
+        # TODO _query may be slowing down initialize due to timeout in case device does not respond back.
         self._query('SYST:BEEP')
 
-    def get_input(self, channel):
+    def get_input(self, channel: int) -> str:
         """
         Get current reading
         Parameters
         ----------
-        channel : int
+        channel :
             channel number
 
         Returns
         -------
-            str answer containing the reading
+            answer containing the reading
         """
-        message = 'IN:CH{}'.format(channel)
+        message = f'IN:CH{channel}'
         ans = self._query(message)
         
         return ans
 
-    def set_output(self, channel, output_value):
+    def set_output(self, channel: int, output_value: int):
         """
         Set analog output on a channel
         Parameters
         ----------
-        channel : int
+        channel :
             number of output channel
-        output_value : int
+        output_value :
             output value in the range 0-4095
         Returns
         -------
             None
         """
-        message = 'OUT:CH{}:{}'.format(channel, output_value)
-        self._query(message)
+        message = f'OUT:CH{channel}:{output_value}'
+        self._query(message)  # reads any potential device response from the message buffer but ignores them.
 
-    def _write(self, message):
+    def _write(self, message: str):
         """
         Write message to the resource
         Parameters
         ----------
-        message : str
+        message :
             message to be sent to the device
+
         Returns
         -------
             None
@@ -285,7 +273,7 @@ class SerialDevice(BaseDevice):
         message = message.encode(self.DEFAULTS['encoding'])
         self._rsc.write(message)
 
-    def _read(self):
+    def _read(self) -> str:
         """
         Read message from the resource
         Returns
@@ -300,20 +288,22 @@ class SerialDevice(BaseDevice):
         ans = ans.decode(self.DEFAULTS['encoding']).strip()
         return ans
 
-    # TODO this should be superfluous because parent implements this already, but for some reason, after removing
-    #  _query from here, pyCharm checker complains that _query() 'does not return anything(?)' whenever child calls it.
-    def _query(self, message):
-        """ Write a message and read the response in one method.
-        Parameters
-        ----------
-        message : str
-            message to send to the device
-        Returns
-        -------
-            str whatever the output message
-        """
-        self._write(message)
-        return self._read()
+    # TODO this should be superfluous because base device implements this already, but for some reason,
+    #  after removing _query from here, pyCharm checker complains that _query() 'does not return anything(?)'
+    #  whenever Serial device child calls it.
+
+    # def _query(self, message: str) -> str:
+    #     """ Write a message and read the response in one method.
+    #     Parameters
+    #     ----------
+    #     message :
+    #         message to send to the device
+    #     Returns
+    #     -------
+    #         Whatever the output message
+    #     """
+    #     self._write(message)
+    #     return self._read()
 
 
 class AgilentU12xxxDmm(SerialDevice):
@@ -331,12 +321,12 @@ class AgilentU12xxxDmm(SerialDevice):
 
     MAX_CHANNELS = 2
 
-    def get_input(self, channel):
+    def get_input(self, channel: int) -> tuple[str, str]:
         """
         Get current reading
         Parameters
         ----------
-        channel : int
+        channel :
             1 - gets primary display reading
             2 - gets secondary display reading
         Returns
@@ -344,7 +334,7 @@ class AgilentU12xxxDmm(SerialDevice):
             tuple of strings with measurement reading and corresponding unit of measure
         """
 
-        self._channel_arg_check(channel, expected_type=int)
+        self._channel_nr_check(channel)
 
         reading_message = 'FETC?'
         unit_message = 'CONF?'
@@ -357,7 +347,9 @@ class AgilentU12xxxDmm(SerialDevice):
 
         reading = self._query(reading_message)
         unit = self._query(unit_message)
-        # output format strongly depends on device type, more here: https://sigrok.org/wiki/Agilent_U12xxx_series
+
+        # output format strongly depends on hw device exact model, more here:
+        # https://sigrok.org/wiki/Agilent_U12xxx_series
 
         return reading, unit
 
@@ -379,22 +371,22 @@ class RohdeHmp4ChPsu(SerialDevice):
 
     MAX_CHANNELS = 4
 
-    def initialize(self):
-        super().initialize()
+    def initialize(self, *args, **kwargs):
+        super().initialize(*args, **kwargs)
         self._disengage_all_outputs()
 
-    def get_input(self, channel):
+    def get_input(self, channel: int) -> tuple[str, str, str, str]:
         """
         Get voltage and current readings from a channel
         Parameters
         ----------
-        channel : int
+        channel :
             channel number
         Returns
         -------
             tuple of strings containing the channel reading and corresponding units of measure
         """
-        self._channel_arg_check(channel, expected_type=int)
+        self._channel_nr_check(channel)
 
         self._write(f'INST:NSEL {str(channel)}')
         voltage = self._query('MEAS:VOLT?')
@@ -402,7 +394,7 @@ class RohdeHmp4ChPsu(SerialDevice):
 
         return voltage, 'Volt', current, 'Amp'
 
-    def set_output(self, channel, voltage=0.0, current=0.0):
+    def set_output(self, channel: int, voltage: float = 0.0, current: float = 0.0):
         """
         Set output voltage and current limits at a specific channel
 
@@ -412,7 +404,7 @@ class RohdeHmp4ChPsu(SerialDevice):
 
         Parameters
         ----------
-        channel : int
+        channel :
             channel number
         voltage : float
             channel voltage limit in volts
@@ -422,21 +414,23 @@ class RohdeHmp4ChPsu(SerialDevice):
         -------
             None
         """
-        self._channel_arg_check(channel, expected_type=int)
+        self._channel_nr_check(channel)
 
         self._write(f'INST:NSEL {str(channel)}')
         # set output levels
         self._write(f"VOLT {str(voltage)}{self.DEFAULTS['write_termination']}CURR {str(current)}")
-        # TODO second write termination missing?
+        # NOTE: Second write termination is added by write. This is a workaround to ensure minimum time delay between
+        # setting voltage and current but acc. to the device documentation the downside is that you cant be certain
+        # as to the order of the two commands execution.
 
-    def engage_output(self, channels, seek_permission=True):
+    def engage_output(self, channels: tuple[int, ...] | int, seek_permission: bool = True) -> int:
         """
         Engage outputs on specific channel(s) with or without user permission.
         Parameters
         ----------
-        channels : int or tuple
+        channels :
             channel or channels to be activated
-        seek_permission : bool
+        seek_permission :
             True - seek user permission before activating the outputs
             False - activate outputs without any permission (dangerous for your DUT!)
         Returns
@@ -445,16 +439,16 @@ class RohdeHmp4ChPsu(SerialDevice):
                 0 - output engage command was not sent because user permission was not granted
         """
 
-        if type(channels) is int:
-            channels = (channels,)  # make exception for passing int instead of a tuple
+        self._channel_nr_check(channels)
 
-        self._channel_arg_check(channels, expected_type=tuple)
+        if type(channels) is int:
+            channels = (channels,)  # place channel int into a tuple to keep code below DRY.
 
         self.disengage_output()
         self._activate_channels(channels)
 
         if seek_permission:
-            print(f'\nDevice {self._id}:\n requesting persmission to engage outputs->')
+            print(f'\nDevice {self._id}:\n requesting permission to engage outputs->')
             for channel in channels:
                 # select channel
                 self._write(f'INST:NSEL {str(channel)}')
@@ -466,22 +460,20 @@ class RohdeHmp4ChPsu(SerialDevice):
             usr_ans = input(f' Are you sure you want to proceed?[y/n] > ')
             if usr_ans.lower() != 'y':
                 print('   Skipping outputs engage.\n')
-                self.disengage_output()  # TODO perhaps this is too conservative/unnecesssary, conisder removing.
                 return 0
             
         self._write('OUTP:GEN 1')
         return 1
-        
-    def _deactivate_channels(self, channels=tuple(range(1, MAX_CHANNELS+1))):
+
+    # TODO: not sure if reaching for class attributes in default arguments is robust, i think I saw it backfire once.
+    def _deactivate_channels(self, channels: tuple[int, ...] = tuple(range(1, MAX_CHANNELS+1))):
         """
         Deactivate all channels 'at once'.
         Parameters
         ----------
-        channels - tuple or int
-            numbers of channels
-        Returns
+        channels -
+            channel numbers to deactivate
         -------
-            None
         """
 
         long_msg = []
@@ -494,7 +486,7 @@ class RohdeHmp4ChPsu(SerialDevice):
             #  but this device does not seem to support that.
         self._write("".join(long_msg))
     
-    def _activate_channels(self, channels=tuple(range(1, MAX_CHANNELS+1))):
+    def _activate_channels(self, channels: tuple = tuple(range(1, MAX_CHANNELS+1))):
         """
         Activate all channels one by one.
         Parameters
@@ -512,7 +504,7 @@ class RohdeHmp4ChPsu(SerialDevice):
             # activate channel
             self._write('OUTP:SEL 1')
 
-    def disengage_output(self, channels='all'):
+    def disengage_output(self, channels: int | tuple[int, ...] | None = None):
         """
         Disengage outputs on specific channels at once.
         Parameters
@@ -523,18 +515,15 @@ class RohdeHmp4ChPsu(SerialDevice):
         -------
             None
         """
-        
-        if channels == 'all':
-            channels = tuple(range(1, self.MAX_CHANNELS+1))
 
-        if type(channels) is int:
-            channels = (channels,)  # pack it up to make it compatible with iterable handling of tuples below
-
-        self._channel_arg_check(channels, expected_type=tuple)
-
-        if channels == tuple(range(1, self.MAX_CHANNELS+1)):
+        if channels is None or channels == tuple(range(1, self.MAX_CHANNELS+1)):
             self._disengage_all_outputs()
-        else:  # deactivate only the specific outputs
+        else:
+            self._channel_nr_check(channels)
+
+            if type(channels) is int:
+                channels = (channels,)  # make channels iterable to keep DRY.
+
             self._deactivate_channels(channels)
 
     def _disengage_all_outputs(self):
@@ -545,7 +534,8 @@ class RohdeHmp4ChPsu(SerialDevice):
             None
         """
         self._write('OUTP:GEN 0')  # immediate shut down of all outputs
-        self._deactivate_channels()
+        self._deactivate_channels() # activate / deactivate has to follow as we abstract this feature from user
+        # completely and want to hide it from the interface to simplify use.
 
 
 class RohdeHmp3ChPsu(RohdeHmp4ChPsu):
@@ -577,36 +567,34 @@ class Fluke28xDmm(SerialDevice):
 
     MAX_CHANNELS = 1
 
-    def idn(self):
+    def idn(self) -> str:
         """
         Query device identification number.
         Returns
         -------
             str identification of the device
         """
-        self._query('ID')  # First portion of the message is just confirmation if query was understood (0 or 1)
-        ans = self._read()  # Next part is the actual ID info
-        return ans
+        # First portion is just query confirmation (0 or 1). We want to read it out and disregard it hence _query call.
+        self._query('ID')
+        return self._read()  # Next part is the actual ID info
 
-    def get_input(self, channel=1):
+    def get_input(self, channel: int = 1) -> tuple[str, str]:
         """
         Get current primary display reading.
         Parameters
         ----------
-        channel : int
+        channel :
             1 - get primary display reading
                 Currently only primary display reading is supported
         Returns
         -------
             tuple of strings with measurement reading and device specific representation of the unit
         """
-        self._channel_arg_check(channel, expected_type=int)
+        self._channel_nr_check(channel)
         self._query('QM')
         ans = self._read()
         print(f'ans: {ans}')
-        ans_list = [item.strip() for item in ans.split(',')]
-        reading = ans_list[0]
-        unit = ans_list[1]
+        reading, unit = tuple(item.strip() for item in ans.split(','))
 
         return reading, unit
 
@@ -628,30 +616,29 @@ class Tti3ChPsu(SerialDevice):
 
     MAX_CHANNELS = 3
 
-    def initialize(self):
-        super().initialize()
+    def initialize(self, *args, **kwargs):
+        super().initialize(*args, **kwargs)
         self._disengage_all_outputs()
 
-    def get_input(self, channel):
+    def get_input(self, channel: int) -> tuple[str, str, str, str]:
         """
         Get voltage and current reading from a channel.
         Parameters
         ----------
-        channel - int
+        channel
             channel number
         Returns
         -------
             tuple of strings containing the measurement reading and corresponding unit of measure
         """
 
-        self._channel_arg_check(channel, expected_type=int)
-
+        self._channel_nr_check(channel)
         voltage = self._query(f'V{str(channel)}O?')[:-1]
         current = self._query(f'I{str(channel)}O?')[:-1]
 
         return voltage, 'Volt', current, 'Amp'
 
-    def set_output(self, channel, voltage=0.0, current=0.0):
+    def set_output(self, channel: int, voltage: float = 0.0, current: float = 0.0):
         """
         Set output voltage and current limits at specific channel
 
@@ -661,50 +648,48 @@ class Tti3ChPsu(SerialDevice):
 
         Parameters
         ----------
-        channel : int
+        channel :
             channel number(s)
-        voltage : float
+        voltage :
             channel voltage limit in volts
-        current : float
+        current :
             channel current limit in ampere
         Returns
         -------
             None
         """
 
-        self._channel_arg_check(channel, expected_type=int)
-        # set output levels
+        self._channel_nr_check(channel)
         self._write(f'V{str(channel)} {str(voltage)};I{str(channel)} {str(current)}')
 
-    def engage_output(self, channels, seek_permission=True):
+    def engage_output(self, channels: tuple[int, ...] | int, seek_permission: bool = True) -> int:
         """
-        Engage outputs on specific channels with user permission
+        Engage outputs on specific channels with user permission.
         Parameters
         ----------
-        channels : tuple of ints or int
+        channels :
             output channel or channels to be engaged
-        seek_permission : bool
+        seek_permission :
             True - seek user permission before activating the outputs
             False - activate outputs without any permission (dangerous for your DUT!)
         Returns
         -------
-        int 1 - output engage command sent,
+            1 - output engage command sent,
             0 - output engage command was not sent because user permission wasn't granted
         """
 
-        if type(channels) is int:
-            channels = (channels,)  # sets an exception for int passed in instead of a tuple
-
-        self._channel_arg_check(channels, expected_type=tuple)
-
+        self._channel_nr_check(channels)
         self.disengage_output()
+
+        if type(channels) is int:
+            channels = (channels,)  # make channels iterable to keep DRY.
 
         if seek_permission:
             # TODO: below code is near identical for both PSU classes. Perhaps it would be worthwhile to unify by
             #  calling get_input instead of _query and def a dedicated SerialDevice method (i.e.
             #  _get_permission_to_engage()). Downside is that each device will return a little different string
             #  formatting for voltage and current.
-            print(f'\nDevice {self._id}:\n requesting persmission to engage outputs->')
+            print(f'\nDevice {self._id}:\n requesting permission to engage outputs->')
             for channel in channels:
     
                 # query input level settings to inform user prior to seeking permission.
@@ -716,7 +701,6 @@ class Tti3ChPsu(SerialDevice):
             usr_ans = input(f' Are you sure you want to proceed?[y/n] > ')
             if usr_ans.lower() != 'y':
                 print('   Skipping outputs engage.\n')
-                self.disengage_output()  # TODO perhaps this is too conservative/unnecessary, consider removing.
                 return 0
         
         # construct one message with request to engage each of the channels:
@@ -724,38 +708,43 @@ class Tti3ChPsu(SerialDevice):
         for channel in channels:
             long_msg.append(f'OP{str(channel)} 1;')
 
+        # For a specific group of channels to be engaged/disengaged its not possible to do so perfectly at the same
+        # time - we inadvertently introduce an in-between state similar to error generation in imperfect binary
+        # conversions. In order to reduce the amount of time the PSU spends going between current and required
+        # outputs state the messages for each channel disengagement are bunched into one long communication which
+        # should reduce the process time to the real-time capability of the PSU microcontroller on the receiving end
+        # and that is normally orders of magnitude faster than making repeated _write() calls that suffer from
+        # operating system delays and slow baud rate of each serial transmission.'
+
         self._write("".join(long_msg))
         return 1
 
-    def disengage_output(self, channels='all'):
+    def disengage_output(self, channels: int | tuple[int, ...] | None = None):
         """
         Disengage outputs on specific channels at once.
         Parameters
         ----------
-        channels : int or tuple of ints
+        channels :
             number(s) of output channel(s) to disengage, when not passed all 
             outputs will be disengaged by default.
         Returns
         -------
             None
         """
-        
-        if channels == 'all':
-            channels = tuple(range(1, self.MAX_CHANNELS+1))
 
-        if type(channels) is int:
-            channels = (channels,)  # make an exception for int as input
-            
-        self._channel_arg_check(channels, expected_type=tuple)
-
-        if channels == tuple(range(1, self.MAX_CHANNELS+1)):
+        if channels is None or channels == tuple(range(1, self.MAX_CHANNELS+1)):
             self._disengage_all_outputs()
-        else:  # deactivate only the the specific outputs, all in one command
+        else:
+            self._channel_nr_check(channels)
+
+            if type(channels) is int:
+                channels = (channels,)  # make channels iterable to keep DRY.
+
             long_msg = []
             for channel in channels:
                 long_msg.append(f'OP{str(channel)} 0;')
-                
-            self._write("".join(long_msg))
+
+            self._write(''.join(long_msg))
 
     def _disengage_all_outputs(self):
         """
@@ -805,7 +794,7 @@ class GlOpticTouch(BaseDevice):
 
     DEFAULTS = {'write_prefix': '<',
                 'write_termination': ' />',
-                'encoding': 'ascii',
+                'encoding': 'UTF-8',  # UTF-8 is default for xml output but the files returned do not contain prolog
                 "HOST": '127.0.0.1',
                 "PORT": 12001,
                 "read_buffer": 32768,
@@ -814,6 +803,8 @@ class GlOpticTouch(BaseDevice):
                 # experimentally up to about 15s)
                 "meas_request": 'request name="measure" beep="on" mode="direct" integration_time="5000" '
                                 'repeat_count="1" auto="on"'}  # with auto="on" integration_time is ignored.
+
+    MAX_CHANNELS = 1
 
     # PORT: Same port that GL SPECTROSOFT establishes (use netstat in case its different in case of your equipment)
 
@@ -826,10 +817,10 @@ class GlOpticTouch(BaseDevice):
         # TODO: implement as _xml... and set up decorated setter and getter with @property and
         #  @xml_dump_file_name.setter, although at this point it appears as unnecessary boilerplate...
 
-    def initialize(self):
+    def initialize(self, interface=socket):
 
         # set up TCP client to talk to the Spectrosoft local host at port 12001
-        spectrosoft_client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        spectrosoft_client_socket = interface.socket(interface.AF_INET, interface.SOCK_STREAM)
         spectrosoft_client_socket.settimeout(self.DEFAULTS['timeout'])
         
         try:
@@ -847,49 +838,69 @@ class GlOpticTouch(BaseDevice):
         self._port = port
         self._rsc = spectrosoft_client_socket
 
-    def _write(self, message):
+    def idn(self):
+        return self.__str__()
+
+    def beep(self):
+        raise NotImplementedError(f'This device can only beep when making a measurement. If you really need it to '
+                                  f'make a sound you could trigger a dummy, short integration time measurement from '
+                                  f'within beep method.')
+
+    def _write(self, message: str):
         message = self.DEFAULTS['write_prefix'] + message + self.DEFAULTS['write_termination']
         message = message.encode(self.DEFAULTS['encoding'])
         self._rsc.sendall(message)
 
     def _read(self):
-        # data returned by recv is readily an xml format string
-        try:
-            gl_xml_string = self._rsc.recv(self.DEFAULTS['read_buffer'])
-        except socket.timeout:
-            raise socket.timeout('Could not obtain measurement data from spectrometer.\n Please check the USB '
+        # data returned by recv is readily xml format bytes type
+        try:  # we could decode here DEFAULTS[encoding] but et.fromstring can manage bytes type as well as str.
+            gl_xml_bytes = self._rsc.recv(self.DEFAULTS['read_buffer'])
+        except socket_timeout_error as err_msg:
+            print(err_msg)
+            # pyCharm inspection throws  expected int arg on class that inherits from builtin TimeoutError ...?
+            raise socket_timeout_error('Could not obtain measurement data from spectrometer.\n Please check the USB '
                                  'connection between PC and the Spectrometer.')
         
-        return self._parse_xml_to_dict(gl_xml_string, xml_dump=self.xml_dump_file_name)
+        return self._parse_xml_to_dict(gl_xml_bytes, xml_dump=self.xml_dump_file_name)
 
     def get_input(self, *args):
         """ Trigger and return measurement output in form of results dictionary
 
         Parameters
         ----------
-        *args : int channel - optional channel argument (here unused)
-        """
-        return self._query(self.DEFAULTS['meas_request'])
-
-    def set_output(self, *args):
-        """
-
-        Parameters
-        ----------
-        args : tuple (int channel, any output_parameters) optional parameters (here unused)
+        *args :
+            int channel - optional channel argument (now unused)
 
         Returns
         -------
 
         """
+        return self._query(self.DEFAULTS['meas_request'])
+
+    def set_output(self, *args):
+        """ Not implemented.
+
+        Parameters
+        ----------
+        args :
+            tuple (int channel, any output_parameters) optional parameters (now unused)
+
+        Returns
+        -------
+
+        """
+        # TODO The measurement message could be modified by this interface without any actual communications here.
         raise NotImplementedError(f'This is not implemented. If you wish to change the measurement parameters you can '
                                   f'modify the DEFAULTS[meas_request] string attribute values. Currently '
                                   f'these attributes are set to {self.DEFAULTS["meas_request"]}')
-        # TODO The measurement message could be modified by this interface without any actual communications here.
+
 
     @staticmethod
-    def _parse_xml_to_dict(xml_string, xml_dump=False):
+    def _parse_xml_to_dict(xml_string: str | bytes, xml_dump: bool | str = False) -> dict:
         root = et.fromstring(xml_string)
+
+        if xml_dump is True:
+            xml_dump = ''
 
         if type(xml_dump) is str:
             date_str = datetime.now().strftime("%Y_%m_%d_%H%M%S")
@@ -901,7 +912,7 @@ class GlOpticTouch(BaseDevice):
         # flatten the data structure to name attributes only (caption atrributes are not very readable and contain
         # unusual complex characters)
         for parameter in root.find('status'):
-            ans_dict['status'][parameter.attrib.get('name')] = parameter.text
+            ans_dict['status'][parameter.attrib.get('name')] = parameter.text  # TODO unexpected type linter complaint
 
         # collect tagged data
         data = root.find('data')
