@@ -534,7 +534,7 @@ class RohdeHmp4ChPsu(SerialDevice):
             None
         """
         self._write('OUTP:GEN 0')  # immediate shut down of all outputs
-        self._deactivate_channels() # activate / deactivate has to follow as we abstract this feature from user
+        self._deactivate_channels()  # activate / deactivate has to follow as we abstract this feature from user
         # completely and want to hide it from the interface to simplify use.
 
 
@@ -859,7 +859,7 @@ class GlOpticTouch(BaseDevice):
             print(err_msg)
             # pyCharm inspection throws  expected int arg on class that inherits from builtin TimeoutError ...?
             raise socket_timeout_error('Could not obtain measurement data from spectrometer.\n Please check the USB '
-                                 'connection between PC and the Spectrometer.')
+                                       'connection between PC and the Spectrometer.')
         
         return self._parse_xml_to_dict(gl_xml_bytes, xml_dump=self.xml_dump_file_name)
 
@@ -893,7 +893,6 @@ class GlOpticTouch(BaseDevice):
         raise NotImplementedError(f'This is not implemented. If you wish to change the measurement parameters you can '
                                   f'modify the DEFAULTS[meas_request] string attribute values. Currently '
                                   f'these attributes are set to {self.DEFAULTS["meas_request"]}')
-
 
     @staticmethod
     def _parse_xml_to_dict(xml_string: str | bytes, xml_dump: bool | str = False) -> dict:
