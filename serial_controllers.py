@@ -4,7 +4,6 @@ import xml.etree.ElementTree as et
 from datetime import datetime
 
 import socket
-from socket import timeout as socket_timeout_error
 
 try:
     import serial
@@ -855,10 +854,10 @@ class GlOpticTouch(BaseDevice):
         # data returned by recv is readily xml format bytes type
         try:  # we could decode here DEFAULTS[encoding] but et.fromstring can manage bytes type as well as str.
             gl_xml_bytes = self._rsc.recv(self.DEFAULTS['read_buffer'])
-        except socket_timeout_error as err_msg:
+        except socket.timeout as err_msg:
             print(err_msg)
             # pyCharm inspection throws  expected int arg on class that inherits from builtin TimeoutError ...?
-            raise socket_timeout_error('Could not obtain measurement data from spectrometer.\n Please check the USB '
+            raise socket.timeout('Could not obtain measurement data from spectrometer.\n Please check the USB '
                                        'connection between PC and the Spectrometer.')
         
         return self._parse_xml_to_dict(gl_xml_bytes, xml_dump=self.xml_dump_file_name)
