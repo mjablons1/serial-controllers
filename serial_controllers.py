@@ -185,7 +185,7 @@ class SerialDevice(BaseDevice):
                                      baudrate=self.DEFAULTS['baudrate'],
                                      timeout=self.DEFAULTS['read_timeout'],
                                      write_timeout=self.DEFAULTS['write_timeout'])
-        sleep(0.5)
+        sleep(0.1)
         self._id = self.idn()
 
         if self._id == '':
