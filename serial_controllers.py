@@ -387,7 +387,7 @@ class RohdeHmp4ChPsu(SerialDevice):
         """
         self._channel_nr_check(channel)
 
-        self._write(f'INST:NSEL {str(channel)}')
+        self._write(f'INST:NSEL {channel}')
         voltage = self._query('MEAS:VOLT?')
         current = self._query('MEAS:CURR?')
 
@@ -415,9 +415,9 @@ class RohdeHmp4ChPsu(SerialDevice):
         """
         self._channel_nr_check(channel)
 
-        self._write(f'INST:NSEL {str(channel)}')
+        self._write(f'INST:NSEL {channel}')
         # set output levels
-        self._write(f"VOLT {str(voltage)}{self.DEFAULTS['write_termination']}CURR {str(current)}")
+        self._write(f"VOLT {voltage}{self.DEFAULTS['write_termination']}CURR {current}")
         # NOTE: Second write termination is added by write. This is a workaround to ensure minimum time delay between
         # setting voltage and current but acc. to the device documentation the downside is that you cant be certain
         # as to the order of the two commands execution.
@@ -450,7 +450,7 @@ class RohdeHmp4ChPsu(SerialDevice):
             print(f'\nDevice {self._id}:\n requesting permission to engage outputs->')
             for channel in channels:
                 # select channel
-                self._write(f'INST:NSEL {str(channel)}')
+                self._write(f'INST:NSEL {channel}')
                 # query input level settings to inform user prior to seeking permission.
                 sel_voltage = self._query('VOLT?')
                 sel_current = self._query('CURR?')
@@ -477,7 +477,7 @@ class RohdeHmp4ChPsu(SerialDevice):
 
         long_msg = []
         for channel in channels:
-            long_msg.append(f'INST:NSEL {str(channel)}{self.DEFAULTS["write_termination"]}OUTP:SEL 0'
+            long_msg.append(f'INST:NSEL {channel}{self.DEFAULTS["write_termination"]}OUTP:SEL 0'
                             f'{self.DEFAULTS["write_termination"]}')
             #  This is a workaround to get the selected channels to shut down as much together as possible (separate
             #  queries can take long and that can lead to in-between outputs state that user may not expect).
@@ -499,7 +499,7 @@ class RohdeHmp4ChPsu(SerialDevice):
 
         for channel in channels:
             # select channel
-            self._write(f'INST:NSEL {str(channel)}')
+            self._write(f'INST:NSEL {channel}')
             # activate channel
             self._write('OUTP:SEL 1')
 
@@ -632,8 +632,8 @@ class Tti3ChPsu(SerialDevice):
         """
 
         self._channel_nr_check(channel)
-        voltage = self._query(f'V{str(channel)}O?')[:-1]
-        current = self._query(f'I{str(channel)}O?')[:-1]
+        voltage = self._query(f'V{channel}O?')[:-1]
+        current = self._query(f'I{channel}O?')[:-1]
 
         return voltage, 'Volt', current, 'Amp'
 
@@ -659,7 +659,7 @@ class Tti3ChPsu(SerialDevice):
         """
 
         self._channel_nr_check(channel)
-        self._write(f'V{str(channel)} {str(voltage)};I{str(channel)} {str(current)}')
+        self._write(f'V{channel} {voltage};I{channel} {current}')
 
     def engage_output(self, channels: tuple[int, ...] | int, seek_permission: bool = True) -> int:
         """
@@ -693,8 +693,8 @@ class Tti3ChPsu(SerialDevice):
     
                 # query input level settings to inform user prior to seeking permission.
                 # The response is V <n> <nr2> where <nr2> is in Volts
-                sel_voltage = self._query(f'V{str(channel)}?')[3:]
-                sel_current = self._query(f'I{str(channel)}?')[3:]
+                sel_voltage = self._query(f'V{channel}?')[3:]
+                sel_current = self._query(f'I{channel}?')[3:]
                 print(f'  Ch:{channel} @: {sel_voltage} Volt / {sel_current} Amp')
 
             usr_ans = input(f' Are you sure you want to proceed?[y/n] > ')
@@ -705,7 +705,7 @@ class Tti3ChPsu(SerialDevice):
         # construct one message with request to engage each of the channels:
         long_msg = []
         for channel in channels:
-            long_msg.append(f'OP{str(channel)} 1;')
+            long_msg.append(f'OP{channel} 1;')
 
         # For a specific group of channels to be engaged/disengaged its not possible to do so perfectly at the same
         # time - we inadvertently introduce an in-between state similar to error generation in imperfect binary
@@ -741,7 +741,7 @@ class Tti3ChPsu(SerialDevice):
 
             long_msg = []
             for channel in channels:
-                long_msg.append(f'OP{str(channel)} 0;')
+                long_msg.append(f'OP{channel} 0;')
 
             self._write(''.join(long_msg))
 
