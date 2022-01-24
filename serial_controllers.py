@@ -405,9 +405,9 @@ class RohdeHmp4ChPsu(SerialDevice):
         ----------
         channel :
             channel number
-        voltage : float
+        voltage :
             channel voltage limit in volts
-        current : float
+        current :
             channel current limit in ampere
         Returns
         -------
