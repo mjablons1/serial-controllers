@@ -446,7 +446,7 @@ class RohdeHmp4ChPsu(SerialDevice):
         self.disengage_output()
         self._activate_channels(channels)
 
-        if seek_permission:
+        if seek_permission: # TODO: this violates separation of concerns
             print(f'\nDevice {self._id}:\n requesting permission to engage outputs->')
             for channel in channels:
                 # select channel
@@ -477,8 +477,7 @@ class RohdeHmp4ChPsu(SerialDevice):
 
         long_msg = []
         for channel in channels:
-            long_msg.append(f'INST:NSEL {channel}{self.DEFAULTS["write_termination"]}OUTP:SEL 0'
-                            f'{self.DEFAULTS["write_termination"]}')
+            long_msg.append(f'INST:NSEL {channel}{self.DEFAULTS["write_termination"]}OUTP:SEL 0')
             #  This is a workaround to get the selected channels to shut down as much together as possible (separate
             #  queries can take long and that can lead to in-between outputs state that user may not expect).
             #  SCPI standard allows to separate commands with semicolon (;) to send more commands in a single message
