@@ -5,22 +5,57 @@ Created on Tue Oct 12 10:22:10 2021
 @author: MJABLONS
 """
 
-import serial
 import serial_controllers as sc
 
 import unittest
-from unittest.mock import Mock, call
+from unittest.mock import Mock, call, patch
+from parameterized import parameterized
+
+import sys
+import os
+
+
+class Silence:
+    def __init__(self):
+        self.old_stdout = sys.stdout
+
+    def __enter__(self):
+        # suppress printing to console
+        sys.stdout = open(os.devnull, "w")
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        sys.stdout.close()
+        # allow printing to console again
+        sys.stdout = self.old_stdout
+
+
+# class BlockPrint:
+#     def __init__(self):
+#         self.print_in_sc = sc.print # This works on a scratch but not here
+#
+#     def __enter__(self):
+#         sc.print = lambda msg: None # navie, probaly will not work
+#         return self
+#
+#     def __exit__(self, exc_type, exc_value, exc_traceback):
+#         sc.print = self.print_in_sc
 
 
 class TestAgilentU12xxxDmm(unittest.TestCase):
 
     def setUp(self):
-
         self.dev = sc.AgilentU12xxxDmm(f'COM-1')
-        self.dev.initialize(interface=Mock(name='Serial Mock', spec=serial))
+        serial_mock = Mock(name='Serial_Mock')
+        with Silence():
+            self.dev.initialize(interface=serial_mock)
+            self.dev._rsc.read_until = Mock(return_value='mock_ans\r\n'.encode('ascii'))
+
+    def test_get_input_wrong_channel_raises_exception(self, channel=42):
+        with self.assertRaises(AssertionError):
+            self.dev.get_input(channel)
 
     def test_get_input1_message(self):
-
         channel = 1
         expected_msg1 = 'FETC?\r\n'.encode('ascii')
         expected_msg2 = 'CONF?\r\n'.encode('ascii')
@@ -29,7 +64,6 @@ class TestAgilentU12xxxDmm(unittest.TestCase):
         self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2)])
 
     def test_get_input2_message(self):
-
         channel = 2
         expected_msg1 = 'FETC? @3\r\n'.encode('ascii')
         expected_msg2 = 'CONF? @3\r\n'.encode('ascii')
@@ -37,9 +71,198 @@ class TestAgilentU12xxxDmm(unittest.TestCase):
         self.dev.get_input(channel)
         self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2)])
 
+    def test_get_input_returns_tuple_of_str(self):
+        channel = 1
+        expected_ans = ('mock_ans', 'mock_ans')
+
+        ans = self.dev.get_input(channel)
+        self.assertEqual(ans, expected_ans)
+
+
+class TestRohdeHmp4ChPsu(unittest.TestCase):
+
+    def setUp(self):
+        self.dev = sc.RohdeHmp4ChPsu(f'COM-1')
+        serial_mock = Mock(name='Serial_Mock')
+        with Silence():
+            self.dev.initialize(interface=serial_mock)
+            self.dev._rsc.read_until = Mock(return_value='mock_ans\r\n'.encode('ascii'))
+
+    def test_get_input_wrong_channel_raises_exception(self, channel=42):
+        with self.assertRaises(AssertionError):
+            self.dev.get_input(channel)
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_get_input_message(self, channel):
+        expected_msg1 = f'INST:NSEL {channel}\n'.encode('ascii')
+        expected_msg2 = 'MEAS:VOLT?\n'.encode('ascii')
+        expected_msg3 = 'MEAS:CURR?\n'.encode('ascii')
+
+        self.dev.get_input(channel)
+        self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2), call(expected_msg3)])
+
+    def test_get_input_returns_tuple_of_str(self):
+        channel = 1
+        expected_ans = ('mock_ans', 'Volt', 'mock_ans', 'Amp')
+
+        ans = self.dev.get_input(channel)
+        self.assertEqual(ans, expected_ans)
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_set_output_sets_zeros_by_default(self, channel):
+        expected_msg1 = f'INST:NSEL {channel}\n'.encode('ascii')
+        expected_msg2 = f'VOLT 0.0\nCURR 0.0\n'.encode('ascii')
+
+        self.dev.set_output(channel)
+        self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2)])
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_set_output_message(self, channel):
+        expected_msg1 = f'INST:NSEL {channel}\n'.encode('ascii')
+        expected_msg2 = f'VOLT 3.141592\nCURR 3.141592\n'.encode('ascii')
+
+        self.dev.set_output(channel, voltage=3.141592, current=3.141592)
+        self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2)])
+
+    def test_engage_output_with_permission_wrong_channel_raises_exception(self, channel=42):
+        with unittest.mock.patch('builtins.input', return_value='y'):
+            with Silence():
+                with self.assertRaises(AssertionError):
+                    self.dev.engage_output(channel)
+
+    def test_engage_output_without_permission_wrong_channel_raises_exception(self, channel=42):
+        with Silence():
+            with self.assertRaises(AssertionError):
+                self.dev.engage_output(channel, seek_permission=False)
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_engage_output_no_permission_returns_zero(self, channel):
+        with unittest.mock.patch('builtins.input', return_value='n'):
+            with Silence():
+                ans = self.dev.engage_output(channel)
+        self.assertEqual(ans, 0)
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_engage_output_message_with_permission(self, channel):
+
+        # select and activate a channel:
+        expected_msg0 = f'INST:NSEL {channel}\n'.encode('ascii')  # select channel for checking
+        expected_msg1 = f'OUTP:SEL 1\n'.encode('ascii')
+
+        # select and check a channel output setting:
+        expected_msg2 = f'INST:NSEL {channel}\n'.encode('ascii')  # select channel for checking
+        expected_msg3 = f'VOLT?\n'.encode('ascii')  # check voltage setting level
+        expected_msg4 = f'CURR?\n'.encode('ascii')  # check current setting level
+
+        # engage the output:
+        expected_msg5 = f'OUTP:GEN 1\n'.encode('ascii')
+
+        unintended_channels = set(range(1, 5)) - set([channel])
+
+        forbidden_msgs = set([f'INST:NSEL {unintended_channel}\n'.encode('ascii')
+                              for unintended_channel in unintended_channels])
+
+        with unittest.mock.patch('builtins.input', return_value='y'):  # grant permission
+            with Silence():
+                self.dev.engage_output(channel)
+
+        # test if sequence will indeed lead to engaging of the intended output channel:
+        with self.subTest('test_engage_output_message_with_permission:A'):
+            self.dev._rsc.write.assert_has_calls([call(expected_msg0),
+                                                  call(expected_msg1),
+                                                  call(expected_msg2),
+                                                  call(expected_msg3),
+                                                  call(expected_msg4),
+                                                  call(expected_msg5)])
+
+        # test if sequence will lead to engaging of any of the remaining, unintended output channels:
+        with self.subTest('test_engage_output_message_with_permission:B'):
+            write_msgs = set([])
+            for call_to_write in self.dev._rsc.write.call_args_list:
+                args, kwargs = call_to_write
+                write_msg, *_ = args
+                write_msgs.add(write_msg)
+
+            forbidden_write_msgs = write_msgs & forbidden_msgs
+
+            if forbidden_write_msgs:
+                self.fail(f'Unintended PSU output channel would have been engaged with messages:\n {forbidden_write_msgs})')
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_engage_output_message_without_permission(self, channel):
+
+        # select and activate a channel:
+        expected_msg0 = f'INST:NSEL {channel}\n'.encode('ascii')  # select channel for checking
+        expected_msg1 = f'OUTP:SEL 1\n'.encode('ascii')
+
+        # engage the output:
+        expected_msg2 = f'OUTP:GEN 1\n'.encode('ascii')
+
+        unintended_channels = set(range(1, 5)) - set([channel])
+        forbidden_msgs = set([f'INST:NSEL {unintended_channel}\n'.encode('ascii')
+                              for unintended_channel in unintended_channels])
+
+        with Silence():
+            self.dev.engage_output(channel, seek_permission=False)
+
+        # test if sequence will indeed lead to engaging of the intended output channel:
+        with self.subTest('test_engage_output_message_without_permission:A'):
+            self.dev._rsc.write.assert_has_calls([call(expected_msg0),
+                                                  call(expected_msg1),
+                                                  call(expected_msg2)])
+
+        # test if sequence will lead to engaging of any of the remaining, unintended output channels:
+        with self.subTest('test_engage_output_message_without_permission:B'):
+            write_msgs = set([])
+            for call_to_write in self.dev._rsc.write.call_args_list:
+                args, kwargs = call_to_write
+                write_msg, *_ = args
+                write_msgs.add(write_msg)
+
+            forbidden_write_msgs = write_msgs & forbidden_msgs
+
+            if forbidden_write_msgs:
+                self.fail(f'Unintended PSU output channel would have been engaged with messages:\n {forbidden_write_msgs})')
+
+    def test_disengage_output_message_defaults_to_all_outputs_disengage(self):
+
+        expected_msg = f'OUTP:GEN 0\n'.encode('ascii')
+        self.dev.disengage_output()
+        self.dev._rsc.write.assert_has_calls([call(expected_msg)])
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_disengage_output_message(self, channel):
+
+        # select and deactivate a channel (this automatically disengages the output):
+        expected_msg = f'INST:NSEL {channel}\nOUTP:SEL 0\n'.encode('ascii')
+
+        unintended_channels = set(range(1, 5)) - set([channel])
+        forbidden_msgs = set([f'INST:NSEL {unintended_channel}\nOUTP:SEL 0\n'.encode('ascii')
+                              for unintended_channel in unintended_channels])
+
+        with Silence():
+            self.dev.disengage_output(channel)
+
+        # test if sequence will indeed lead to disengaging of the intended output channel:
+        with self.subTest('test_engage_output_message_without_permission:A'):
+            self.dev._rsc.write.assert_has_calls([call(expected_msg)])
+
+        # test if sequence will lead to disengaging of any of the remaining, unintended output channels:
+        with self.subTest('test_engage_output_message_without_permission:B'):
+            write_msgs = set([])
+            for call_to_write in self.dev._rsc.write.call_args_list:
+                args, kwargs = call_to_write
+                write_msg, *_ = args
+                write_msgs.add(write_msg)
+
+            forbidden_write_msgs = write_msgs & forbidden_msgs
+            if forbidden_write_msgs:
+                self.fail(f'Unintended PSU output channel would have been disengaged with messages:\n {forbidden_write_msgs})')
+
+
 if __name__ == '__main__':
-    # in PyCharm you need to ALT+SHIFT+F10 to select standard runner so that unit test is executed instead of pytest.
-    # Default runner is pytest and changing the runner setup does not seem to take any effect.
+    # in PyCharm ALT+SHIFT+F10 to select unittest runner instead of the default, pytest runner.
+
     unittest.main()
     #unittest_return = unittest.main(exit=False)
 
