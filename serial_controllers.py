@@ -164,8 +164,6 @@ class SerialDevice(BaseDevice):
                 'write_timeout': 1,
                 }
 
-    MAX_CHANNELS = 2  # TODO not sure if there is any good reason to override here
-
     def __init__(self, port: str):
 
         # Remind user to install serial package to use any serial device:
@@ -287,22 +285,8 @@ class SerialDevice(BaseDevice):
         ans = ans.decode(self.DEFAULTS['encoding']).strip()
         return ans
 
-    # TODO this should be superfluous because base device implements this already, but for some reason,
-    #  after removing _query from here, pyCharm checker complains that _query() 'does not return anything(?)'
-    #  whenever Serial device child calls it.
-
-    # def _query(self, message: str) -> str:
-    #     """ Write a message and read the response in one method.
-    #     Parameters
-    #     ----------
-    #     message :
-    #         message to send to the device
-    #     Returns
-    #     -------
-    #         Whatever the output message
-    #     """
-    #     self._write(message)
-    #     return self._read()
+#  TODO add SerialPsuDevice ABC that expands SerialDevice by the engage_output and disengage output abstract methods that force the int | tuple interfac through abstractmethod
+# class SerialPsuDevice(SerialDevice):
 
 
 class AgilentU12xxxDmm(SerialDevice):
