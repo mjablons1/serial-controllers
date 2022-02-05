@@ -30,16 +30,25 @@ class Silence:
         sys.stdout = self.old_stdout
 
 
-# class BlockPrint:
-#     def __init__(self):
-#         self.print_in_sc = sc.print # This works on a scratch but not here
-#
-#     def __enter__(self):
-#         sc.print = lambda msg: None # navie, probaly will not work
-#         return self
-#
-#     def __exit__(self, exc_type, exc_value, exc_traceback):
-#         sc.print = self.print_in_sc
+def arg_set_from_call_list(call_args_list: list[call]) -> set:
+    """
+    Utility function to nimble out a set of positional arguments with which calls were made.
+    This utility function supports checking if a specific, unwanted message was called.
+    This allows functionality similar to "assert_has_no_calls" that is missing in unittest library.
+    Parameters
+    ----------
+    call_args_list
+        list of calls that were made to a mocked interface.
+
+    Returns -------
+        set of first positional arguments with which calls were made.
+    """
+    write_msgs = set([])
+    for call_to_write in call_args_list:
+        args, kwargs = call_to_write
+        write_msg, *_ = args
+        write_msgs.add(write_msg)
+    return write_msgs
 
 
 class TestAgilentU12xxxDmm(unittest.TestCase):
@@ -143,6 +152,32 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
         self.assertEqual(ans, 0)
 
     @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_engage_output_w_permission_returns_one(self, channel):
+        with unittest.mock.patch('builtins.input', return_value='y'):
+            with Silence():
+                ans = self.dev.engage_output(channel)
+        self.assertEqual(ans, 1)
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
+    def test_engage_output_no_permission_does_not_engage_output(self, channel):
+
+        forbidden_msgs = set([f'OUTP:GEN 1\n'.encode('ascii')])
+
+        # any other input than 'y' or 'Y' should be treated as no permission
+        with unittest.mock.patch('builtins.input', return_value='x'):
+            with Silence():
+                ans = self.dev.engage_output(channel)
+
+        # test if sequence will not lead to engaging of any of the output channels:
+        with self.subTest('test_engage_output_no_permission_does_not_engage_output:B'):
+            write_msgs = arg_set_from_call_list(self.dev._rsc.write.call_args_list)
+            forbidden_write_msgs = write_msgs & forbidden_msgs
+
+            if forbidden_write_msgs:
+                self.fail(f'Unintended PSU output channel would have been engaged with messages:'
+                          f'\n {forbidden_write_msgs})')
+
+    @parameterized.expand([(1,), (2,), (3,), (4,)])
     def test_engage_output_message_with_permission(self, channel):
 
         # select and activate a channel:
@@ -162,7 +197,7 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
         forbidden_msgs = set([f'INST:NSEL {unintended_channel}\n'.encode('ascii')
                               for unintended_channel in unintended_channels])
 
-        with unittest.mock.patch('builtins.input', return_value='y'):  # grant permission
+        with unittest.mock.patch('builtins.input', return_value='y'):  # mock permission
             with Silence():
                 self.dev.engage_output(channel)
 
@@ -175,18 +210,14 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
                                                   call(expected_msg4),
                                                   call(expected_msg5)])
 
-        # test if sequence will lead to engaging of any of the remaining, unintended output channels:
+        # test if sequence will not lead to engaging of any of the remaining, unintended output channels:
         with self.subTest('test_engage_output_message_with_permission:B'):
-            write_msgs = set([])
-            for call_to_write in self.dev._rsc.write.call_args_list:
-                args, kwargs = call_to_write
-                write_msg, *_ = args
-                write_msgs.add(write_msg)
-
+            write_msgs = arg_set_from_call_list(self.dev._rsc.write.call_args_list)
             forbidden_write_msgs = write_msgs & forbidden_msgs
 
             if forbidden_write_msgs:
-                self.fail(f'Unintended PSU output channel would have been engaged with messages:\n {forbidden_write_msgs})')
+                self.fail(f'Unintended PSU output channel would have been engaged with messages:'
+                          f'\n {forbidden_write_msgs})')
 
     @parameterized.expand([(1,), (2,), (3,), (4,)])
     def test_engage_output_message_without_permission(self, channel):
@@ -211,18 +242,14 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
                                                   call(expected_msg1),
                                                   call(expected_msg2)])
 
-        # test if sequence will lead to engaging of any of the remaining, unintended output channels:
+        # test if sequence will not lead to engaging of any of the remaining, unintended output channels:
         with self.subTest('test_engage_output_message_without_permission:B'):
-            write_msgs = set([])
-            for call_to_write in self.dev._rsc.write.call_args_list:
-                args, kwargs = call_to_write
-                write_msg, *_ = args
-                write_msgs.add(write_msg)
-
+            write_msgs = arg_set_from_call_list(self.dev._rsc.write.call_args_list)
             forbidden_write_msgs = write_msgs & forbidden_msgs
 
             if forbidden_write_msgs:
-                self.fail(f'Unintended PSU output channel would have been engaged with messages:\n {forbidden_write_msgs})')
+                self.fail(f'Unintended PSU output channel would have been engaged with messages:'
+                          f'\n {forbidden_write_msgs})')
 
     def test_disengage_output_message_defaults_to_all_outputs_disengage(self):
 
@@ -244,20 +271,17 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
             self.dev.disengage_output(channel)
 
         # test if sequence will indeed lead to disengaging of the intended output channel:
-        with self.subTest('test_engage_output_message_without_permission:A'):
+        with self.subTest('test_disengage_output_message_without_permission:A'):
             self.dev._rsc.write.assert_has_calls([call(expected_msg)])
 
-        # test if sequence will lead to disengaging of any of the remaining, unintended output channels:
-        with self.subTest('test_engage_output_message_without_permission:B'):
-            write_msgs = set([])
-            for call_to_write in self.dev._rsc.write.call_args_list:
-                args, kwargs = call_to_write
-                write_msg, *_ = args
-                write_msgs.add(write_msg)
-
+        # test if sequence will not lead to engaging of any of the remaining, unintended output channels:
+        with self.subTest('test_disengage_output_message_without_permission:B'):
+            write_msgs = arg_set_from_call_list(self.dev._rsc.write.call_args_list)
             forbidden_write_msgs = write_msgs & forbidden_msgs
+
             if forbidden_write_msgs:
-                self.fail(f'Unintended PSU output channel would have been disengaged with messages:\n {forbidden_write_msgs})')
+                self.fail(f'Unintended PSU output channel would have been engaged with messages:'
+                          f'\n {forbidden_write_msgs})')
 
 
 if __name__ == '__main__':
