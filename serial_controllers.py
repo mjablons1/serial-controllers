@@ -285,9 +285,6 @@ class SerialDevice(BaseDevice):
         ans = ans.decode(self.DEFAULTS['encoding']).strip()
         return ans
 
-#  TODO add SerialPsuDevice ABC that expands SerialDevice by the engage_output and disengage output abstract methods that force the int | tuple interfac through abstractmethod
-# class SerialPsuDevice(SerialDevice):
-
 
 class AgilentU12xxxDmm(SerialDevice):
     """
@@ -340,7 +337,137 @@ class AgilentU12xxxDmm(SerialDevice):
         print(f'Device class {self.__class__.__name__} does not allow control of its output\n')
 
 
-class RohdeHmp4ChPsu(SerialDevice):
+class Fluke28xDmm(SerialDevice):
+    """
+    Fluke 28x DMM basic controller
+    """
+
+    DEFAULTS = {'write_termination': '\r',
+                'read_termination': '\r',
+                'encoding': 'ascii',
+                'baudrate': 115200,
+                'read_timeout': 1,
+                'write_timeout': 1,
+                }
+
+    MAX_CHANNELS = 1
+
+    def idn(self) -> str:
+        """
+        Query device identification number.
+        Returns
+        -------
+            str identification of the device
+        """
+        # First portion is just query confirmation (0 or 1). We want to read it out and disregard it hence _query call.
+        self._query('ID')
+        return self._read()  # Next part is the actual ID info
+
+    def get_input(self, channel: int = 1) -> tuple[str, str]:
+        """
+        Get current primary display reading.
+        Parameters
+        ----------
+        channel :
+            1 - get primary display reading
+                Currently only primary display reading is supported
+        Returns
+        -------
+            tuple of strings with measurement reading and device specific representation of the unit
+        """
+        self._channel_nr_check(channel)
+        self._query('QM')
+        ans = self._read()
+        print(f'ans: {ans}')
+        reading, unit = tuple(item.strip() for item in ans.split(','))
+
+        return reading, unit
+
+    def set_output(self, channel, output_value):
+        print(f'Device class {self.__class__.__name__} does not allow control of its output.\n')
+
+
+class SerialPsuDevice(SerialDevice):
+
+    def initialize(self, *args, **kwargs):
+        super().initialize(*args, **kwargs)
+        self.disengage_output()
+
+    @abstractmethod
+    def get_input(self, channel: int) -> tuple[str, str, str, str]:
+        """
+        Get voltage and current readings from a channel.
+        Parameters
+        ----------
+        channel :
+            channel number
+        Returns
+        -------
+            tuple of strings containing the channel reading and corresponding units of measure
+        """
+        pass
+
+    @abstractmethod
+    def set_output(self, channel: int, voltage: float = 0.0, current: float = 0.0):
+        """
+            Set output voltage and current limits at a specific channel
+
+            NOTE: be careful when changing voltage and current settings when outputs are engaged. There may also be a time
+            delay between setting voltage and current limit that can cause transient state which could be dangerous
+            for your DUT.
+
+            Parameters
+            ----------
+            channel :
+                channel number
+            voltage :
+                channel voltage limit in volts
+            current :
+                channel current limit in ampere
+            Returns
+            -------
+                None
+            """
+        pass
+
+    @abstractmethod
+    def engage_output(self, channels: tuple[int, ...] | int, seek_permission: bool = True) -> int:
+        """
+        Engage outputs on specific channel(s) with or without user permission.
+        Parameters
+        ----------
+        channels :
+            channel or channels to be activated
+        seek_permission :
+            True - seek user permission before activating the outputs
+            False - activate outputs without any permission (dangerous for your DUT!)
+        Returns
+        -------
+            1 - output engage command sent.
+            0 - output engage command was not sent because user permission was not granted.
+        """
+        pass
+
+    @abstractmethod
+    def disengage_output(self, channels: int | tuple[int, ...] | None = None):
+        """
+        Disengage outputs on specific channels at once.
+        Parameters
+        ----------
+        channels :
+            number(s) of output channel(s) to disengage, when not passed all outputs will be disengaged
+        Returns
+        -------
+            None
+        """
+        pass
+
+
+# TODO instead crete a generic RohdeHmpPsu class that accepts additional number_of_channels input on init. In order
+#  to keep backward compatibility of the existing API keep all specific model classes (e.g. RohdeHmp3ChPsu) but as
+#  factories that return above class with a fixed channel argument (this can be achieved by introducing __new__ method)
+
+class RohdeHmp4ChPsu(SerialPsuDevice):
     """
     Rohde & Shwarz HMP4000 basic controller
     """
@@ -353,10 +480,6 @@ class RohdeHmp4ChPsu(SerialDevice):
                 }
 
     MAX_CHANNELS = 4
-
-    def initialize(self, *args, **kwargs):
-        super().initialize(*args, **kwargs)
-        self._disengage_all_outputs()
 
     def get_input(self, channel: int) -> tuple[str, str, str, str]:
         """
@@ -534,57 +657,7 @@ class RohdeHmp2ChPsu(RohdeHmp4ChPsu):
     MAX_CHANNELS = 2
 
 
-class Fluke28xDmm(SerialDevice):
-    """
-    Fluke 28x DMM basic controller
-    """
-
-    DEFAULTS = {'write_termination': '\r',
-                'read_termination': '\r',
-                'encoding': 'ascii',
-                'baudrate': 115200,
-                'read_timeout': 1,
-                'write_timeout': 1,
-                }
-
-    MAX_CHANNELS = 1
-
-    def idn(self) -> str:
-        """
-        Query device identification number.
-        Returns
-        -------
-            str identification of the device
-        """
-        # First portion is just query confirmation (0 or 1). We want to read it out and disregard it hence _query call.
-        self._query('ID')
-        return self._read()  # Next part is the actual ID info
-
-    def get_input(self, channel: int = 1) -> tuple[str, str]:
-        """
-        Get current primary display reading.
-        Parameters
-        ----------
-        channel :
-            1 - get primary display reading
-                Currently only primary display reading is supported
-        Returns
-        -------
-            tuple of strings with measurement reading and device specific representation of the unit
-        """
-        self._channel_nr_check(channel)
-        self._query('QM')
-        ans = self._read()
-        print(f'ans: {ans}')
-        reading, unit = tuple(item.strip() for item in ans.split(','))
-
-        return reading, unit
-
-    def set_output(self, channel, output_value):
-        print(f'Device class {self.__class__.__name__} does not allow control of its output.\n')
-
-
-class Tti3ChPsu(SerialDevice):
+class Tti3ChPsu(SerialPsuDevice):
     """
     TTI 3 channel PSU basic controller
     """
@@ -597,10 +670,6 @@ class Tti3ChPsu(SerialDevice):
                 }
 
     MAX_CHANNELS = 3
-
-    def initialize(self, *args, **kwargs):
-        super().initialize(*args, **kwargs)
-        self._disengage_all_outputs()
 
     def get_input(self, channel: int) -> tuple[str, str, str, str]:
         """
