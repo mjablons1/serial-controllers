@@ -683,8 +683,8 @@ class Tti3ChPsu(SerialPsuDevice):
         """
 
         self._channel_nr_check(channel)
-        voltage = self._query(f'V{channel}O?')[:-1]
-        current = self._query(f'I{channel}O?')[:-1]
+        voltage = self._query(f'V{channel}O?')
+        current = self._query(f'I{channel}O?')
 
         return voltage, 'Volt', current, 'Amp'
 
