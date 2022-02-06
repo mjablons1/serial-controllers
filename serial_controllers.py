@@ -32,32 +32,32 @@ class BaseDevice(ABC):
     @abstractmethod
     def initialize(self, interface=None):
         """ Establish communication / open port using instance or class attributes. """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def idn(self):
         """ Request the device to introduce itself to you. """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def beep(self):
         """ Request the device to make itself stand out from the physical test setup by making a sound, if possible.
         It's so cool when it does that. """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def get_input(self, channel: int) -> tuple[str, ...]:
         """ Get measurement input from a specific measurement channel. The response tuple should divide between
         measurement value string and unit information string. Method should construct a device-specific message and
         pass it to the device with _query. """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def set_output(self, channel: int, output_parameters):
         """ Set output parameters at a specific measurement channel. Method should construct a device-specific
         message and pass it to the device with _write (if device does not acknowledge) or _query (if device is
         expected to acknowledge). """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     def _query(self, message: str) -> str:
         """ Write a message and read the response in one method.
@@ -75,12 +75,12 @@ class BaseDevice(ABC):
     @abstractmethod
     def _write(self, message: str):
         """ Lowest level write to whatever communication API represented by self._rsc. """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def _read(self) -> str:
         """ Lowest level read from whatever communication API represented by self._rsc. """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     def finalize(self):
         """
@@ -405,7 +405,7 @@ class SerialPsuDevice(SerialDevice):
         -------
             tuple of strings containing the channel reading and corresponding units of measure
         """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def set_output(self, channel: int, voltage: float = 0.0, current: float = 0.0):
@@ -428,7 +428,7 @@ class SerialPsuDevice(SerialDevice):
             -------
                 None
             """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def engage_output(self, channels: tuple[int, ...] | int, seek_permission: bool = True) -> int:
@@ -446,7 +446,7 @@ class SerialPsuDevice(SerialDevice):
             1 - output engage command sent.
             0 - output engage command was not sent because user permission was not granted.
         """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
     @abstractmethod
     def disengage_output(self, channels: int | tuple[int, ...] | None = None):
@@ -460,7 +460,7 @@ class SerialPsuDevice(SerialDevice):
         -------
             None
         """
-        pass
+        raise NotImplementedError('Device class misses to override this abstract method.')
 
 
 # TODO instead crete a generic RohdeHmpPsu class that accepts additional number_of_channels input on init. In order
