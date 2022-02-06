@@ -64,24 +64,47 @@ class TestAgilentU12xxxDmm(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.dev.get_input(channel)
 
-    def test_get_input1_message(self):
-        channel = 1
+    def test_get_input1_message(self, channel=1):
         expected_msg1 = 'FETC?\r\n'.encode('ascii')
         expected_msg2 = 'CONF?\r\n'.encode('ascii')
 
         self.dev.get_input(channel)
         self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2)])
 
-    def test_get_input2_message(self):
-        channel = 2
+    def test_get_input2_message(self, channel=2):
         expected_msg1 = 'FETC? @3\r\n'.encode('ascii')
         expected_msg2 = 'CONF? @3\r\n'.encode('ascii')
 
         self.dev.get_input(channel)
         self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2)])
 
-    def test_get_input_returns_tuple_of_str(self):
-        channel = 1
+    def test_get_input_returns_tuple_of_str(self, channel=1):
+        expected_ans = ('mock_ans', 'mock_ans')
+
+        ans = self.dev.get_input(channel)
+        self.assertEqual(ans, expected_ans)
+
+
+class TestFluke28xDmm(unittest.TestCase):
+
+    def setUp(self):
+        self.dev = sc.Fluke28xDmm(f'COM-1')
+        serial_mock = Mock(name='Serial_Mock')
+        with Silence():
+            self.dev.initialize(interface=serial_mock)
+            self.dev._rsc.read_until = Mock(return_value='mock_ans, mock_ans\r'.encode('ascii'))
+
+    def test_get_input_wrong_channel_raises_exception(self, channel=42):
+        with self.assertRaises(AssertionError):
+            self.dev.get_input(channel)
+
+    def test_get_input1_message(self, channel=1):
+        expected_msg = 'QM\r'.encode('ascii')
+
+        self.dev.get_input(channel)
+        self.dev._rsc.write.assert_has_calls([call(expected_msg)])
+
+    def test_get_input_returns_tuple_of_str(self, channel=1):
         expected_ans = ('mock_ans', 'mock_ans')
 
         ans = self.dev.get_input(channel)
@@ -110,8 +133,7 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
         self.dev.get_input(channel)
         self.dev._rsc.write.assert_has_calls([call(expected_msg1), call(expected_msg2), call(expected_msg3)])
 
-    def test_get_input_returns_tuple_of_str(self):
-        channel = 1
+    def test_get_input_returns_tuple_of_str(self, channel=1):
         expected_ans = ('mock_ans', 'Volt', 'mock_ans', 'Amp')
 
         ans = self.dev.get_input(channel)
