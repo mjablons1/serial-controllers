@@ -378,7 +378,6 @@ class Fluke28xDmm(SerialDevice):
         self._channel_nr_check(channel)
         self._query('QM')
         ans = self._read()
-        print(f'ans: {ans}')
         reading, unit = tuple(item.strip() for item in ans.split(','))
 
         return reading, unit
