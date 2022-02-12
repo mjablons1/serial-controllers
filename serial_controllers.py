@@ -570,8 +570,7 @@ class RohdeHmp4ChPsu(SerialPsuDevice):
         self._write('OUTP:GEN 1')
         return 1
 
-    # TODO: not sure if reaching for class attributes in default arguments is robust, i think I saw it backfire once.
-    def _deactivate_channels(self, channels: tuple[int, ...] = tuple(range(1, MAX_CHANNELS+1))):
+    def _deactivate_channels(self, channels: tuple[int, ...] | None = None):
         """
         Deactivate all channels 'at once'.
         Parameters
@@ -580,6 +579,9 @@ class RohdeHmp4ChPsu(SerialPsuDevice):
             channel numbers to deactivate
         -------
         """
+
+        if channels is None:
+            channels = tuple(range(1, self.MAX_CHANNELS+1))
 
         long_msg = []
         for channel in channels:
