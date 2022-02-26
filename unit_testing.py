@@ -82,7 +82,7 @@ class TestAgilentU12xxxDmm(unittest.TestCase):
         expected_ans = ('mock_ans', 'mock_ans')
 
         ans = self.dev.get_input(channel)
-        self.assertEqual(ans, expected_ans)
+        self.assertEqual(expected_ans, ans)
 
 
 class TestFluke28xDmm(unittest.TestCase):
@@ -92,7 +92,7 @@ class TestFluke28xDmm(unittest.TestCase):
         serial_mock = Mock(name='Serial_Mock')
         with Silence():
             self.dev.initialize(interface=serial_mock)
-            self.dev._rsc.read_until = Mock(return_value='mock_ans, mock_ans\r'.encode('ascii'))
+            self.dev._rsc.read_until = Mock(return_value='mock_ans_, mock_ans_, mock_ans_, mock_ans_\r'.encode('ascii'))
 
     def test_get_input_wrong_channel_raises_exception(self, channel=42):
         with self.assertRaises(AssertionError):
@@ -108,7 +108,7 @@ class TestFluke28xDmm(unittest.TestCase):
         expected_ans = ('mock_ans', 'mock_ans')
 
         ans = self.dev.get_input(channel)
-        self.assertEqual(ans, expected_ans)
+        self.assertEqual(expected_ans, ans)
 
 
 class TestRohdeHmp4ChPsu(unittest.TestCase):
@@ -137,7 +137,7 @@ class TestRohdeHmp4ChPsu(unittest.TestCase):
         expected_ans = ('mock_ans', 'Volt', 'mock_ans', 'Amp')
 
         ans = self.dev.get_input(channel)
-        self.assertEqual(ans, expected_ans)
+        self.assertEqual(expected_ans, ans)
 
     @parameterized.expand([(1,), (2,), (3,), (4,)])
     def test_set_output_sets_zeros_by_default(self, channel):
@@ -331,7 +331,7 @@ class TestTti3ChPsu(unittest.TestCase):
         expected_ans = ('mock_ans', 'Volt', 'mock_ans', 'Amp')
 
         ans = self.dev.get_input(channel)
-        self.assertEqual(ans, expected_ans)
+        self.assertEqual(expected_ans, ans)
 
     # TODO CONTINUE UPDATING MESSAGES FROM HERE:
     @parameterized.expand([(1,), (2,), (3,)])
