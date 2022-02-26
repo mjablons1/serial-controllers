@@ -378,7 +378,7 @@ class Fluke28xDmm(SerialDevice):
         self._channel_nr_check(channel)
         self._query('QM')
         ans = self._read()
-        reading, unit = tuple(item.strip() for item in ans.split(','))
+        reading, unit, _, _ = tuple(item.strip() for item in ans.split(','))
 
         return reading, unit
 
@@ -685,8 +685,8 @@ class Tti3ChPsu(SerialPsuDevice):
         """
 
         self._channel_nr_check(channel)
-        voltage = self._query(f'V{channel}O?')
-        current = self._query(f'I{channel}O?')
+        voltage = self._query(f'V{channel}O?')[:-1] # last char is the unit
+        current = self._query(f'I{channel}O?')[:-1] # last char is the unit
 
         return voltage, 'Volt', current, 'Amp'
 
