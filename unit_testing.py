@@ -92,7 +92,7 @@ class TestFluke28xDmm(unittest.TestCase):
         serial_mock = Mock(name='Serial_Mock')
         with Silence():
             self.dev.initialize(interface=serial_mock)
-            self.dev._rsc.read_until = Mock(return_value='mock_ans_, mock_ans_, mock_ans_, mock_ans_\r'.encode('ascii'))
+            self.dev._rsc.read_until = Mock(return_value='mock_ans, mock_ans, mock_ans, mock_ans_\r'.encode('ascii'))
 
     def test_get_input_wrong_channel_raises_exception(self, channel=42):
         with self.assertRaises(AssertionError):
@@ -313,7 +313,7 @@ class TestTti3ChPsu(unittest.TestCase):
         serial_mock = Mock(name='Serial_Mock')
         with Silence():
             self.dev.initialize(interface=serial_mock)
-            self.dev._rsc.read_until = Mock(return_value='mock_ans\r\n'.encode('ascii'))
+            self.dev._rsc.read_until = Mock(return_value='mock_ans_\r\n'.encode('ascii'))
 
     def test_get_input_wrong_channel_raises_exception(self, channel=42):
         with self.assertRaises(AssertionError):
