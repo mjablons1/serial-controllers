@@ -1,5 +1,5 @@
 # *NOTE:*
-*This fork requires python >=3.10 due to the latest type hinting syntax use (specifically the new Union operator |).*
+*This branch requires python >=3.10 due to the latest type hinting syntax use (specifically the new Union operator |).*
 
 # serial-controllers
 Several basic controller classes for serial hardware such as DMMs (Digital Multimters) and PSUs (Power Supplies).
